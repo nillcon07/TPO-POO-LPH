@@ -1,7 +1,10 @@
-package modelo.finanzas;
+package main.java.modelo.finanzas;
 
 import java.io.Serializable;
 import java.util.*;
+
+import main.java.modelo.comun.Fechas;
+import main.java.modelo.finanzas.Expensa;
 import modelo.comunidad.Lote;
 import modelo.comun.*;
 
@@ -16,7 +19,7 @@ public class CuentaLote implements Serializable {
     private boolean moroso;
     private int episodioMorosidad;
 
-    public CuentaLote(Lote lote) { this.lote = Validaciones.requerido(lote, "Lote"); }
+    public CuentaLote(Lote lote) { this.lote = modelo.comun.Validaciones.requerido(lote, "Lote"); }
 
     public boolean tienePeriodo(String periodo) {
         for (Expensa expensa : expensas) {
@@ -30,21 +33,21 @@ public class CuentaLote implements Serializable {
     }
 
     public Expensa emitir(String periodo, double importe, String fechaEmision) {
-        Validaciones.exigir(!tienePeriodo(periodo), "Ya existe una expensa de ese lote y período.");
+        modelo.comun.Validaciones.exigir(!tienePeriodo(periodo), "Ya existe una expensa de ese lote y período.");
         Expensa expensa = new Expensa(periodo, importe, lote, fechaEmision);
         expensas.add(expensa);
         return expensa;
     }
 
     public Pago registrarPago(String fecha, double importe, MedioPago medio) {
-        if (!pagos.isEmpty()) Validaciones.exigir(Fechas.compararFechas(fecha, pagos.get(pagos.size() - 1).getFecha()) >= 0,
+        if (!pagos.isEmpty()) modelo.comun.Validaciones.exigir(Fechas.compararFechas(fecha, pagos.get(pagos.size() - 1).getFecha()) >= 0,
                 "Los pagos se registran cronológicamente.");
-        if (!ajustes.isEmpty()) Validaciones.exigir(Fechas.compararFechas(fecha, ajustes.get(ajustes.size() - 1).getFecha()) >= 0,
+        if (!ajustes.isEmpty()) modelo.comun.Validaciones.exigir(Fechas.compararFechas(fecha, ajustes.get(ajustes.size() - 1).getFecha()) >= 0,
                 "El pago no puede preceder al último ajuste.");
         Pago nuevo = new Pago(pagos.size() + 1, fecha, importe, medio, lote);
         List<Pago> candidatos = new ArrayList<>(pagos);
         candidatos.add(nuevo);
-        EstadoCuenta resultado = calcular(fecha, candidatos, ajustes);
+        modelo.finanzas.EstadoCuenta resultado = calcular(fecha, candidatos, ajustes);
         List<ImputacionPago> originales = new ArrayList<>();
         for (ImputacionPago imputacion : resultado.getImputacionesEfectivas()) {
             if (imputacion.getPago() == nuevo) originales.add(imputacion);
