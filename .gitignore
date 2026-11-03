@@ -1,0 +1,5 @@
+target/
+out/
+datos/*.dat
+datos/*.tmp
+lib/*.jar
