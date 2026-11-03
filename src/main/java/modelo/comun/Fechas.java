@@ -1,6 +1,7 @@
 package modelo.comun;
 
 /** Fechas en String y cálculos con enteros: calendario gregoriano, sin bibliotecas de fechas. */
+// Clase de utilidad final para manejo, validación y comparación de fechas y horas representadas en formato String sin librerías externas.
 public final class Fechas {
     private static String momentoActual;
 
@@ -24,41 +25,41 @@ public final class Fechas {
     }
 
     public static String periodo(String valor) {
-        Validaciones.exigir(valor != null && valor.length() == 7 && valor.charAt(4) == '-',
+        modelo.comun.Validaciones.exigir(valor != null && valor.length() == 7 && valor.charAt(4) == '-',
                 "Período inválido; use aaaa-MM.");
-        Validaciones.exigir(digitos(valor.substring(0, 4)) && digitos(valor.substring(5, 7)),
+        modelo.comun.Validaciones.exigir(digitos(valor.substring(0, 4)) && digitos(valor.substring(5, 7)),
                 "Período inválido; use aaaa-MM.");
         int anio = Integer.parseInt(valor.substring(0, 4));
         int mes = Integer.parseInt(valor.substring(5, 7));
-        Validaciones.exigir(anio >= 1 && mes >= 1 && mes <= 12, "Período inválido; use aaaa-MM.");
+        modelo.comun.Validaciones.exigir(anio >= 1 && mes >= 1 && mes <= 12, "Período inválido; use aaaa-MM.");
         return valor;
     }
 
     public static String fecha(String valor) {
-        Validaciones.exigir(valor != null && valor.length() == 10 && valor.charAt(7) == '-',
+        modelo.comun.Validaciones.exigir(valor != null && valor.length() == 10 && valor.charAt(7) == '-',
                 "Fecha inválida; use aaaa-MM-dd.");
         periodo(valor.substring(0, 7));
-        Validaciones.exigir(digitos(valor.substring(8, 10)), "Día inválido.");
+        modelo.comun.Validaciones.exigir(digitos(valor.substring(8, 10)), "Día inválido.");
         int anio = Integer.parseInt(valor.substring(0, 4));
         int mes = Integer.parseInt(valor.substring(5, 7));
         int dia = Integer.parseInt(valor.substring(8, 10));
-        Validaciones.exigir(dia >= 1 && dia <= diasDelMes(anio, mes), "El día no existe en ese mes.");
+        modelo.comun.Validaciones.exigir(dia >= 1 && dia <= diasDelMes(anio, mes), "El día no existe en ese mes.");
         return valor;
     }
 
     public static String hora(String valor) {
-        Validaciones.exigir(valor != null && valor.length() == 5 && valor.charAt(2) == ':',
+        modelo.comun.Validaciones.exigir(valor != null && valor.length() == 5 && valor.charAt(2) == ':',
                 "Hora inválida; use HH:mm.");
-        Validaciones.exigir(digitos(valor.substring(0, 2)) && digitos(valor.substring(3, 5)),
+        modelo.comun.Validaciones.exigir(digitos(valor.substring(0, 2)) && digitos(valor.substring(3, 5)),
                 "Hora inválida; use HH:mm.");
         int horas = Integer.parseInt(valor.substring(0, 2));
         int minutos = Integer.parseInt(valor.substring(3, 5));
-        Validaciones.exigir(horas <= 23 && minutos <= 59, "Hora inválida; use HH:mm.");
+        modelo.comun.Validaciones.exigir(horas <= 23 && minutos <= 59, "Hora inválida; use HH:mm.");
         return valor;
     }
 
     public static String momento(String valor) {
-        Validaciones.exigir(valor != null && valor.length() == 16 && valor.charAt(10) == ' ',
+        modelo.comun.Validaciones.exigir(valor != null && valor.length() == 16 && valor.charAt(10) == ' ',
                 "Fecha y hora inválidas; use aaaa-MM-dd HH:mm.");
         fecha(valor.substring(0, 10));
         hora(valor.substring(11, 16));
@@ -110,7 +111,7 @@ public final class Fechas {
     }
 
     public static void noAnterior(String anterior, String nuevo) {
-        Validaciones.exigir(minutosEntre(anterior, nuevo) >= 0,
+        modelo.comun.Validaciones.exigir(minutosEntre(anterior, nuevo) >= 0,
                 "La fecha no puede ser anterior al último evento.");
     }
 
@@ -120,7 +121,7 @@ public final class Fechas {
     }
 
     public static String ahora() {
-        Validaciones.exigir(momentoActual != null, "Primero indique la fecha y hora de la sesión.");
+        modelo.comun.Validaciones.exigir(momentoActual != null, "Primero indique la fecha y hora de la sesión.");
         return momentoActual;
     }
 
