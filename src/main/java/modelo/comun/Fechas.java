@@ -1,4 +1,4 @@
-package modelo.comun;
+package main.java.modelo.comun;
 
 /** Fechas en String y cálculos con enteros: calendario gregoriano, sin bibliotecas de fechas. */
 // Clase de utilidad final para manejo, validación y comparación de fechas y horas representadas en formato String sin librerías externas.
@@ -9,7 +9,7 @@ public final class Fechas {
 
     private static boolean digitos(String texto) {
         for (int i = 0; i < texto.length(); i++) {
-            if (texto.charAt(i) < '0' || texto.charAt(i) > '9') return false;
+            if (!Character.isDigit(texto.charAt(i))) return false;
         }
         return true;
     }
