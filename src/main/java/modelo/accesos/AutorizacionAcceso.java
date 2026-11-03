@@ -15,19 +15,38 @@ public class AutorizacionAcceso implements Serializable {
     private final Persona personaAutoriza;
     private final VisitanteProveedor personaAutorizada;
     private final Lote loteVisitado;
-    public AutorizacionAcceso(int numero, Persona autoriza, VisitanteProveedor visitante, Lote lote, String inicio, String fin, String desde, String hasta, boolean recurrente) {
+    public AutorizacionAcceso(int numero, Persona autoriza, VisitanteProveedor visitante,
+                              Lote lote, String inicio, String fin,
+                              String desde, String hasta, boolean recurrente) {
         Validaciones.exigir(numero > 0, "Número de autorización inválido.");
-        Validaciones.requerido(autoriza, "Autorizante"); Validaciones.requerido(visitante, "Visitante"); Validaciones.requerido(lote, "Lote");
-        Validaciones.exigir(lote.puedeAutorizarVisita(autoriza), "Solo el titular o un residente registrado puede autorizar visitas.");
+        Validaciones.requerido(autoriza, "Autorizante");
+        Validaciones.requerido(visitante, "Visitante");
+        Validaciones.requerido(lote, "Lote");
+
+        Validaciones.exigir(lote.puedeAutorizarVisita(autoriza),
+                "Solo el titular o un residente registrado puede autorizar visitas.");
+
         long dias = Fechas.dias(inicio, fin);
         Validaciones.exigir(dias >= 0, "La vigencia de la autorización está invertida.");
         Validaciones.exigir(Fechas.compararHoras(desde, hasta) <= 0, "La franja horaria no puede cruzar la medianoche.");
+
         if (recurrente) {
-            Validaciones.exigir(visitante.getTipo() == TipoVisitante.PROVEEDOR && visitante.isProveedorHabitual(), "Una autorización recurrente requiere un proveedor habitual.");
+            Validaciones.exigir(visitante.getTipo() == TipoVisitante.PROVEEDOR && visitante.isProveedorHabitual(),
+                    "Una autorización recurrente requiere un proveedor habitual.");
             Validaciones.exigir(dias + 1 <= 30, "La vigencia recurrente máxima es de treinta días inclusive.");
-        } else Validaciones.exigir(dias == 0, "Una visita no recurrente debe corresponder a un solo día.");
-        this.numero = numero; this.personaAutoriza = autoriza; this.personaAutorizada = visitante; this.loteVisitado = lote;
-        this.fechaInicio = inicio; this.fechaFin = fin; this.horaDesde = desde; this.horaHasta = hasta; this.esRecurrente = recurrente;
+        } else {
+            Validaciones.exigir(dias == 0, "Una visita no recurrente debe corresponder a un solo día.");
+        }
+
+        this.numero = numero;
+        this.personaAutoriza = autoriza;
+        this.personaAutorizada = visitante;
+        this.loteVisitado = lote;
+        this.fechaInicio = inicio;
+        this.fechaFin = fin;
+        this.horaDesde = desde;
+        this.horaHasta = hasta;
+        this.esRecurrente = recurrente;
     }
     // Evalúa si la autorización se encuentra activa para una fecha y hora específicas. param fechaHora Cadena con formato 'YYYY-MM-DD HH:MM'. return true si la autorización cumple con el rango de fechas, horas y permisos actuales.
     public boolean estaVigente(String fechaHora) {
