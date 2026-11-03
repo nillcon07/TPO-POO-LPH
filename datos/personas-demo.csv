@@ -1,0 +1,10 @@
+documento;nombre;apellido;telefono;correoElectronico
+100;Ana;Administradora;000-100;ana@example.invalid
+101;Valeria;Titular;000-101;valeria@example.invalid
+102;Bruno;Titular;000-102;bruno@example.invalid
+103;Carla;Residente;000-103;carla@example.invalid
+104;Diego;Guardia;000-104;diego@example.invalid
+105;Elena;Tecnica;000-105;elena@example.invalid
+106;Fabian;Visitante;000-106;fabian@example.invalid
+107;Gabriela;Proveedora;000-107;gabriela@example.invalid
+108;Hugo;PersonaDisponible;000-108;hugo@example.invalid
