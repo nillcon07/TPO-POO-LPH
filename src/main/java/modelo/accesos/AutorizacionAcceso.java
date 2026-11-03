@@ -5,6 +5,7 @@ import modelo.comun.*;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
 
+//Representa una autorización de acceso emitida para una visita o proveedor a un lote y permite validar la vigencia temporal y las reglas de negocio del barrio.
 
 public class AutorizacionAcceso implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -28,6 +29,7 @@ public class AutorizacionAcceso implements Serializable {
         this.numero = numero; this.personaAutoriza = autoriza; this.personaAutorizada = visitante; this.loteVisitado = lote;
         this.fechaInicio = inicio; this.fechaFin = fin; this.horaDesde = desde; this.horaHasta = hasta; this.esRecurrente = recurrente;
     }
+    // Evalúa si la autorización se encuentra activa para una fecha y hora específicas. param fechaHora Cadena con formato 'YYYY-MM-DD HH:MM'. return true si la autorización cumple con el rango de fechas, horas y permisos actuales.
     public boolean estaVigente(String fechaHora) {
         Fechas.momento(fechaHora);
         String fecha = fechaHora.substring(0, 10);
