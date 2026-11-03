@@ -1,7 +1,7 @@
-package modelo.archivos;
+package main.java.modelo.archivos;
 
-import modelo.reclamos.Reclamo;
-import modelo.repositorios.RepositorioReclamos;
+import main.java.modelo.reclamos.Reclamo;
+import main.java.modelo.repositorios.RepositorioReclamos;
 
 import java.util.List;
 

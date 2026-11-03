@@ -1,4 +1,4 @@
-package modelo.barrio;
+package main.java.modelo.barrio;
 
 public class Main {
     static void main(String[] args) {

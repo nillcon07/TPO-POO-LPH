@@ -1,4 +1,4 @@
-package modelo.mantenimiento;
+package main.java.modelo.mantenimiento;
 
 public class Falla {
 }

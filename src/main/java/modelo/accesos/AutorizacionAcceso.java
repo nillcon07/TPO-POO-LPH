@@ -1,4 +1,4 @@
-package modelo.accesos;
+package main.java.modelo.accesos;
 
 public class AutorizacionAcceso {
 }

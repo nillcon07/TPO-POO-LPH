@@ -1,4 +1,4 @@
-package modelo.personas;
+package main.java.modelo.personas;
 
-public class EmpleadoMantenimiento extends Personal {
+public class EmpleadoMantenimiento extends modelo.personas.Personal {
 }

@@ -1,4 +1,4 @@
-package modelo.mantenimiento;
+package main.java.modelo.mantenimiento;
 
-public class Luminaria extends Equipo {
+public class Luminaria extends modelo.mantenimiento.Equipo {
 }

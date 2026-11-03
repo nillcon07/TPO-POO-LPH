@@ -1,4 +1,4 @@
-package modelo.reclamos;
+package main.java.modelo.reclamos;
 
 public enum TipoReclamo {
     SEGURIDAD,

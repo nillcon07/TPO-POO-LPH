@@ -1,4 +1,4 @@
-package modelo.finanzas;
+package main.java.modelo.finanzas;
 
 public enum EstadoExpensa {
     PENDIENTE,

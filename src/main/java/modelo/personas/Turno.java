@@ -1,4 +1,4 @@
-package modelo.personas;
+package main.java.modelo.personas;
 
 public enum Turno {
     MANANA,
