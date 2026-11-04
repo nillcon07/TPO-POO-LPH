@@ -1,4 +1,4 @@
-package main.java.modelo.reportes;
+package modelo.reportes;
 
 public class GeneradorDeReportes {
 }

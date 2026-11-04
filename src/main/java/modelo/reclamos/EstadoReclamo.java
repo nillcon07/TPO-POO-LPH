@@ -1,4 +1,4 @@
-package main.java.modelo.reclamos;
+package modelo.reclamos;
 
 public enum EstadoReclamo {
     ABIERTO,

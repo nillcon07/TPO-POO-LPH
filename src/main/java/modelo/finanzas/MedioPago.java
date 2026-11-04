@@ -1,4 +1,4 @@
-package main.java.modelo.finanzas;
+package modelo.finanzas;
 
 public enum MedioPago {
     EFECTIVO,

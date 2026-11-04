@@ -1,4 +1,4 @@
-package main.java.modelo.comunidad;
+package modelo.comunidad;
 
 public class Sector implements java.io.Serializable {
     private static final long serialVersionUID = 1L;

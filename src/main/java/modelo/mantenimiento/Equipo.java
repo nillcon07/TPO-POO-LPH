@@ -1,4 +1,4 @@
-package main.java.modelo.mantenimiento;
+package modelo.mantenimiento;
 
 import java.io.Serializable;
 import java.util.*;

@@ -1,8 +1,8 @@
-package main.java.modelo.comun;
+package modelo.comun;
 
 import java.io.Serializable;
 
-import main.java.modelo.comun.Fechas;
+import modelo.comun.Fechas;
 import modelo.personas.Persona;
 
 /** Constancia interna: no envía correos ni mensajes externos. */

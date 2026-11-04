@@ -1,6 +1,6 @@
-package main.java.modelo.repositorios;
+package modelo.repositorios;
 
-import main.java.modelo.reclamos.Reclamo;
+import modelo.reclamos.Reclamo;
 
 import java.util.List;
 

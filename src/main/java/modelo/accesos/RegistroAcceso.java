@@ -1,4 +1,4 @@
-package main.java.modelo.accesos;
+package modelo.accesos;
 
 import modelo.comun.*;
 import modelo.personas.*;

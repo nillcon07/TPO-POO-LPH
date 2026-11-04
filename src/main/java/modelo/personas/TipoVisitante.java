@@ -1,4 +1,4 @@
-package main.java.modelo.personas;
+package modelo.personas;
 
 public enum TipoVisitante {
     VISITA,

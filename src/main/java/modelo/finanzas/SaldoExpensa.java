@@ -1,8 +1,8 @@
-package main.java.modelo.finanzas;
+package modelo.finanzas;
 
-import main.java.modelo.comun.Fechas;
-import main.java.modelo.finanzas.EstadoExpensa;
-import main.java.modelo.finanzas.Expensa;
+import modelo.comun.Fechas;
+import modelo.finanzas.EstadoExpensa;
+import modelo.finanzas.Expensa;
 import modelo.comun.*;
 
 /** Resultado de una consulta; nunca reemplaza los movimientos originales. */

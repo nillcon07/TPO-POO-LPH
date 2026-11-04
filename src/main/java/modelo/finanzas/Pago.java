@@ -1,4 +1,4 @@
-package main.java.modelo.finanzas;
+package modelo.finanzas;
 
 import java.io.Serializable;
 import java.util.*;

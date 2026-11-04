@@ -1,4 +1,4 @@
-package main.java.modelo.personas;
+package modelo.personas;
 
 public abstract class Personal extends Persona {
     private static final long serialVersionUID = 1L;

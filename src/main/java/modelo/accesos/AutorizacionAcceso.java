@@ -1,10 +1,10 @@
-package main.java.modelo.accesos;
+package modelo.accesos;
 
 import java.io.Serializable;
 
-import main.java.modelo.personas.Persona;
-import main.java.modelo.personas.TipoVisitante;
-import main.java.modelo.personas.VisitanteProveedor;
+import modelo.personas.Persona;
+import modelo.personas.TipoVisitante;
+import modelo.personas.VisitanteProveedor;
 import modelo.comun.*;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
