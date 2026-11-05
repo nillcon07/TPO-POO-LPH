@@ -1,10 +1,10 @@
-package main.java.modelo.finanzas;
+package modelo.finanzas;
 
 import java.io.Serializable;
 import java.util.*;
 
-import main.java.modelo.comun.Fechas;
-import main.java.modelo.finanzas.Expensa;
+import modelo.comun.Fechas;
+import modelo.finanzas.Expensa;
 import modelo.comunidad.Lote;
 import modelo.comun.*;
 

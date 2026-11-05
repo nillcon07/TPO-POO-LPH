@@ -2,7 +2,7 @@ package controlador;
 
 import java.util.*;
 
-import main.java.modelo.personas.Persona;
+import modelo.personas.Persona;
 import modelo.comunidad.*;
 import modelo.personas.*;
 import modelo.reclamos.*;

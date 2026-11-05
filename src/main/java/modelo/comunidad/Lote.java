@@ -1,4 +1,4 @@
-package main.java.modelo.comunidad;
+package modelo.comunidad;
 
 import java.io.Serializable;
 import java.util.*;

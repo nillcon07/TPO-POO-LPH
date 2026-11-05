@@ -1,4 +1,4 @@
-package main.java.modelo.personas;
+package modelo.personas;
 
 import java.io.Serializable;
 import modelo.comun.Validaciones;

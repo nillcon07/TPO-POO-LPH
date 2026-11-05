@@ -1,4 +1,4 @@
-package main.java.modelo.reclamos;
+package modelo.reclamos;
 
 public final class Comentario implements java.io.Serializable {
     private static final long serialVersionUID = 1L;

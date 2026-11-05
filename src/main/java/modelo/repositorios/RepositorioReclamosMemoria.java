@@ -5,6 +5,7 @@ import modelo.comunidad.Barrio;
 import modelo.reclamos.Reclamo;
 import modelo.comun.ReglaNegocioException;
 
+
 public final class RepositorioReclamosMemoria implements RepositorioReclamos {
     private final Barrio barrio;
 

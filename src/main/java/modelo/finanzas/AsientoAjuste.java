@@ -1,4 +1,4 @@
-package main.java.modelo.finanzas;
+package modelo.finanzas;
 
 public final class AsientoAjuste implements java.io.Serializable {
     private static final long serialVersionUID = 1L;

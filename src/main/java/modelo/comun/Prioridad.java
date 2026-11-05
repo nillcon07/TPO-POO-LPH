@@ -1,4 +1,4 @@
-package main.java.modelo.comun;
+package modelo.comun;
 
 public enum Prioridad {
     BAJA,
