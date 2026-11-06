@@ -5,7 +5,7 @@ import java.util.List;
 import modelo.comun.Validaciones;
 import modelo.personas.Persona;
 
-public final class RepositorioPersonasMemoria implements RepositorioPersonas {
+public final class RepositorioPersonasMemoria extends RepositorioPersonasBase {
     private final List<Persona> personas = new ArrayList<>();
 
     public RepositorioPersonasMemoria(List<Persona> iniciales) {

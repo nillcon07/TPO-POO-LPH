@@ -4,10 +4,10 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import modelo.personas.Persona;
-import modelo.repositorios.RepositorioPersonas;
+import modelo.repositorios.RepositorioPersonasBase;
 import modelo.comun.Validaciones;
 
-public final class RepositorioPersonasCsv implements RepositorioPersonas {
+public final class RepositorioPersonasCsv extends RepositorioPersonasBase {
     private final Path archivo;
     private final List<Persona> personas;
     public RepositorioPersonasCsv(Path archivo) {

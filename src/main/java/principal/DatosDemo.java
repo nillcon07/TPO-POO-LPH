@@ -18,7 +18,7 @@ public final class DatosDemo {
 
     public static void main(String[] args) {
         RepositorioPersonas personas = new RepositorioPersonasMemoria(
-                new RepositorioPersonasCsv(Paths.get("datos", "personas-demo.csv")).listar());
+                new RepositorioPersonasCsv(Paths.get("datos", "personas.csv")).listar());
         Barrio barrio = crear(personas);
         RepositorioBarrio memoria = new RepositorioBarrioMemoria(barrio);
         GestorBarrioControlador controlador = new GestorBarrioControlador(

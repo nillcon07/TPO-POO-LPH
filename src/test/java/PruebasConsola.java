@@ -14,7 +14,7 @@ import vista.VistaConsola;
 
 public final class PruebasConsola {
     private static final class Contexto {
-        final RepositorioPersonas personas = new RepositorioPersonasMemoria(new RepositorioPersonasCsv(Paths.get("datos/personas-demo.csv")).listar());
+        final RepositorioPersonas personas = new RepositorioPersonasMemoria(new RepositorioPersonasCsv(Paths.get("datos/personas.csv")).listar());
         final Barrio barrio = DatosDemo.crear(personas);
         int guardados;
         final GestorBarrioControlador controlador = new GestorBarrioControlador(

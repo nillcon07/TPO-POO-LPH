@@ -43,7 +43,7 @@ public final class PruebasAceptacion {
     }
     private static final class Contexto {
         Contexto() { Fechas.establecerMomento("2026-11-03 10:00"); }
-        final RepositorioPersonas personas = new RepositorioPersonasMemoria(new RepositorioPersonasCsv(Paths.get("datos/personas-demo.csv")).listar());
+        final RepositorioPersonas personas = new RepositorioPersonasMemoria(new RepositorioPersonasCsv(Paths.get("datos/personas.csv")).listar());
         final Barrio barrio = DatosDemo.crear(personas);
         final Administrador admin = barrio.getAdministrador();
         final Persona titular = personas.buscarPorDocumento("101"), residente = personas.buscarPorDocumento("103");

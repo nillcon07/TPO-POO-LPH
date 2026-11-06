@@ -1,8 +1,8 @@
 package modelo.personas;
 
 public abstract class Personal extends Persona {
-    private static final long serialVersionUID = 1L;
-    private final String legajo, fechaIngreso;
+    private final String legajo;
+    private final String fechaIngreso;
     protected Personal(Persona persona, String legajo, String fechaIngreso) {
         super(persona);
         modelo.comun.Fechas.fecha(fechaIngreso);
