@@ -168,6 +168,7 @@ public final class VistaConsola {
     }
 
     private void agregarLote() {
+        controlador.verificarAdministrador(actor);
         int numero = entero("Número del lote: ");
         double superficie = decimal("Superficie en m²: ");
         Persona titular = persona();

@@ -28,6 +28,7 @@ public class GestorBarrioControlador {
     }
     private <T> T confirmar(T resultado) { guardar(); return resultado; }
     private void admin(Persona actor) { barrio.exigirAdministrador(actor); }
+    public void verificarAdministrador(Persona actor) {admin(actor);}
     private void validarActor(Persona actor) {
         Validaciones.requerido(actor, "Actor");
         if (actor instanceof Personal) barrio.exigirPersonal((Personal) actor);
