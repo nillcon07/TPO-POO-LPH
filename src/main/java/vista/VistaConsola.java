@@ -46,20 +46,42 @@ public final class VistaConsola {
                         controlador.guardar();
                         System.out.println("Datos guardados. Hasta luego.");
                         return;
-                    case 1: cambiarActor(); break;
-                    case 2: comunidad(); break;
-                    case 3: reclamos(); break;
-                    case 4: finanzas(); break;
-                    case 5: mantenimiento(); break;
-                    case 6: accesos(); break;
-                    case 7: System.out.println(controlador.generarReportes(actor, Fechas.ahora())); break;
-                    case 8: controlador.guardar(); completada(); break;
-                    case 9: controlador.verificarControles(Fechas.ahora()); completada(); break;
+                    case 1:
+                        cambiarActor();
+                        break;
+                    case 2:
+                        comunidad();
+                        break;
+                    case 3:
+                        reclamos();
+                        break;
+                    case 4:
+                        finanzas();
+                        break;
+                    case 5:
+                        mantenimiento();
+                        break;
+                    case 6:
+                        accesos();
+                        break;
+                    case 7:
+                        System.out.println(controlador.generarReportes(actor, Fechas.ahora()));
+                        break;
+                    case 8:
+                        controlador.guardar();
+                        completada();
+                        break;
+                    case 9:
+                        controlador.verificarControles(Fechas.ahora());
+                        completada();
+                        break;
                     case 10:
                         solicitarFechaHora(true);
-                        if (!finEntrada) completada();
+                        if (!finEntrada)
+                            completada();
                         break;
-                    default: System.out.println("Opción inválida.");
+                    default:
+                        System.out.println("Opción inválida.");
                 }
             } catch (IllegalArgumentException | IllegalStateException e) {
                 System.out.println("ERROR: " + e.getMessage());
@@ -72,7 +94,10 @@ public final class VistaConsola {
 
     private void actualizarActor() {
         for (Persona persona : controlador.listarActores()) {
-            if (persona.equals(actor)) { actor = persona; return; }
+            if (persona.equals(actor)) {
+                actor = persona;
+                return;
+            }
         }
     }
 
@@ -81,7 +106,8 @@ public final class VistaConsola {
             String valor = leer("Fecha y hora de la sesión (aaaa-MM-dd HH:mm): ");
             if (finEntrada) return;
             try {
-                if (comprobarAvance) Fechas.noAnterior(Fechas.ahora(), valor);
+                if (comprobarAvance)
+                    Fechas.noAnterior(Fechas.ahora(), valor);
                 Fechas.establecerMomento(valor);
                 return;
             } catch (IllegalArgumentException e) {
@@ -103,16 +129,21 @@ public final class VistaConsola {
     }
 
     private String descripcionActor(Persona persona) {
-        if (persona instanceof Administrador) return "Administrador";
-        if (persona instanceof Guardia) return "Guardia";
-        if (persona instanceof EmpleadoMantenimiento) return "EmpleadoMantenimiento";
-        if (persona instanceof Residente) return "Residente";
+        if (persona instanceof Administrador)
+            return "Administrador";
+        if (persona instanceof Guardia)
+            return "Guardia";
+        if (persona instanceof EmpleadoMantenimiento)
+            return "EmpleadoMantenimiento";
+        if (persona instanceof Residente)
+            return "Residente";
         return "Persona";
     }
 
     private void menu(String titulo, String[] opciones) {
         System.out.println("\n=== " + titulo + " ===");
-        for (int i = 0; i < opciones.length; i++) System.out.println((i + 1) + ") " + opciones[i]);
+        for (int i = 0; i < opciones.length; i++)
+            System.out.println((i + 1) + ") " + opciones[i]);
         System.out.println("0) " + (titulo.equals("Menú principal") ? "Guardar y salir" : "Volver"));
     }
 
