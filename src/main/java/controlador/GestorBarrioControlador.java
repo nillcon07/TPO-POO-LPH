@@ -92,6 +92,20 @@ public class GestorBarrioControlador {
         return barrio.getLotes();
     }
 
+    public List<Lote> listarLotesDelTitular(Persona actor) {
+        validarActor(actor);
+
+        List<Lote> lotesDelTitular = new ArrayList<>();
+
+        for (Lote lote : barrio.getLotes()) {
+            if (lote.getTitular().equals(actor)) {
+                lotesDelTitular.add(lote);
+            }
+        }
+
+        return lotesDelTitular;
+    }
+
     public List<Personal> listarPersonal() {
         return barrio.getPersonal();
     }
