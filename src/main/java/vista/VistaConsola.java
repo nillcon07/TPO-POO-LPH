@@ -164,7 +164,9 @@ public final class VistaConsola {
                     case 6: permisoReclamos(); break;
                     case 7: agregarGuardia(); break;
                     case 8: agregarEmpleado(); break;
-                    case 9: listar(controlador.listarPersonas()); break;
+                    case 9:
+                        controlador.verificarAdministrador(actor);
+                        listar(controlador.listarPersonas()); break;
                     case 10: agregarPersona(); break;
                     default: System.out.println("Opción inválida.");
                 }
@@ -175,6 +177,7 @@ public final class VistaConsola {
     }
 
     private void listarComunidad() {
+        controlador.verificarAdministrador(actor);
         System.out.println("LOTES (" + controlador.listarLotes().size() + "/150)");
         for (Lote lote : controlador.listarLotes()) {
             System.out.println(lote + " | " + lote.getSuperficie() + " m²");
@@ -188,6 +191,7 @@ public final class VistaConsola {
     }
 
     private void agregarPersona() {
+        controlador.verificarAdministrador(actor);
         String documento = leer("Documento: ");
         String nombre = leer("Nombre: ");
         String apellido = leer("Apellido: ");
@@ -209,6 +213,7 @@ public final class VistaConsola {
     }
 
     private void agregarResidente() {
+        controlador.verificarAdministrador(actor);
         int lote = lote(); if (lote == 0) return;
         Persona persona = persona(); if (persona == null) return;
         TipoResidente tipo = seleccionar("TipoResidente", TipoResidente.values());
@@ -218,6 +223,7 @@ public final class VistaConsola {
     }
 
     private void quitarResidente() {
+        controlador.verificarAdministrador(actor);
         int lote = lote(); if (lote == 0) return;
         Persona persona = persona(); if (persona == null || finEntrada) return;
         controlador.quitarResidente(actor, lote, persona.getDocumento());
@@ -225,6 +231,7 @@ public final class VistaConsola {
     }
 
     private void cambiarTitular() {
+        controlador.verificarAdministrador(actor);
         int lote = lote(); if (lote == 0) return;
         Persona persona = persona(); if (persona == null || finEntrada) return;
         controlador.cambiarTitular(actor, lote, persona.getDocumento());
@@ -232,15 +239,40 @@ public final class VistaConsola {
     }
 
     private void permisoReclamos() {
-        int lote = lote(); if (lote == 0) return;
-        Persona persona = persona(); if (persona == null) return;
-        boolean autorizar = siNo("¿Autorizar? (s para autorizar, n para revocar): ");
+
+        List<Lote> misLotes = controlador.listarLotesDelTitular(actor);
+
+        if (misLotes.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Solo el titular de un lote puede administrar permisos de reclamo."
+            );
+        }
+
+        Lote loteSeleccionado = seleccionar("Mis lotes", misLotes);
+
+        if (loteSeleccionado == null || finEntrada) return;
+
+        Persona persona = persona();
+        if (persona == null || finEntrada) return;
+
+        boolean autorizar = siNo(
+                "¿Autorizar? (s para autorizar, n para revocar): "
+        );
+
         if (finEntrada) return;
-        controlador.permisoReclamos(actor, lote, persona.getDocumento(), autorizar);
+
+        controlador.permisoReclamos(
+                actor,
+                loteSeleccionado.getNumero(),
+                persona.getDocumento(),
+                autorizar
+        );
+
         completada();
     }
 
     private void agregarGuardia() {
+        controlador.verificarAdministrador(actor);
         Persona persona = persona(); if (persona == null) return;
         String legajo = leer("Legajo: "), fecha = fecha("Fecha de ingreso");
         Turno turno = seleccionar("Turno", Turno.values()); if (turno == null) return;
@@ -251,6 +283,7 @@ public final class VistaConsola {
     }
 
     private void agregarEmpleado() {
+        controlador.verificarAdministrador(actor);
         Persona persona = persona(); if (persona == null) return;
         String legajo = leer("Legajo: "), fecha = fecha("Fecha de ingreso");
         Especialidad especialidad = seleccionar("Especialidad", Especialidad.values());
