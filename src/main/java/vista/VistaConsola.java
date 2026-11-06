@@ -13,7 +13,6 @@ import modelo.finanzas.*;
 import modelo.mantenimiento.*;
 import modelo.accesos.*;
 
-/** Menús con Scanner, while, switch e if. Las reglas se delegan al controlador. */
 public final class VistaConsola {
     private final GestorBarrioControlador controlador;
     private final Scanner entrada = new Scanner(System.in);
@@ -30,7 +29,6 @@ public final class VistaConsola {
 
     public void iniciar() {
         System.out.println("LOS AROMOS — MENÚ DE TERMINAL");
-        System.out.println("El cambio de actor permite recorrer los permisos del trabajo práctico.");
         System.out.println("La fecha y hora de la sesión se ingresan como texto y se pueden avanzar con la opción 10.");
         solicitarFechaHora(false);
         while (!finEntrada) {

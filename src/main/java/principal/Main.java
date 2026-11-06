@@ -12,7 +12,7 @@ import vista.VistaConsola;
 public class Main {
     public static void main(String[] args) {
         try {
-            String ruta = "datos/barrio-demo.dat";
+            String ruta = "datos/barrio.dat";
             boolean resumen = false;
             String fechaHora = null;
             for (String argumento : args) {
@@ -21,7 +21,7 @@ public class Main {
                 else if (argumento.startsWith("--fecha=")) fechaHora = argumento.substring(8);
                 else throw new IllegalArgumentException("Argumento no reconocido: " + argumento);
             }
-            RepositorioPersonas personas = new RepositorioPersonasCsv(Paths.get("datos", "personas-demo.csv"));
+            RepositorioPersonas personas = new RepositorioPersonasCsv(Paths.get("datos", "personas.csv"));
             RepositorioBarrio almacenamiento = new RepositorioBarrioArchivo(Paths.get(ruta));
             Barrio barrio = almacenamiento.cargar();
             if (barrio == null) barrio = DatosDemo.crear(personas);

@@ -41,6 +41,11 @@ public class GestorBarrioControlador {
     public List<Persona> listarPersonas() { return new ArrayList<>(personas.listar()); }
     public Persona agregarPersona(Persona actor, String documento, String nombre, String apellido, String telefono, String correo) {
         admin(actor);
+        documento = Validaciones.validarDigito(documento, "Documento");
+        nombre = Validaciones.validarCaracter(nombre, "Nombre");
+        apellido = Validaciones.validarCaracter(apellido, "Apellido");
+        telefono = Validaciones.validarDigito(telefono, "Teléfono");
+        correo = Validaciones.validarCorreo(correo, "Correo");
         Persona nueva = new Persona(nombre, apellido, documento, telefono, correo);
         personas.agregarPersona(nueva);
         return nueva;

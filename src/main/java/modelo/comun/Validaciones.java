@@ -3,8 +3,33 @@ package modelo.comun;
 public final class Validaciones {
     private Validaciones() { }
 
+    //exigir -> base de varias validaciones ya que es la encargada de lanzar el error//
     public static void exigir(boolean condicion, String mensaje) {
         if (!condicion) throw new ReglaNegocioException(mensaje);
+    }
+
+    public static String validarDigito(String valor, String campo){
+        String dato = texto(valor, campo);
+        for (int i = 0; i < dato.length(); i++) {
+            char caracter = dato.charAt(i);
+            exigir(caracter >= '0' && caracter <= '9', campo + " debe contener solo dígitos.");
+        }
+        return dato;
+    }
+
+    public static String validarCaracter(String valor, String campo){
+        String dato = texto(valor, campo);
+        for (int i = 0; i < dato.length(); i++) {
+            char caracter = dato.charAt(i);
+            exigir(Character.isLetter(caracter) || caracter == ' ', campo + " debe contener caracteres.");
+        }
+        return  dato;
+    }
+
+    public static String validarCorreo(String valor, String campo) {
+        String correo = texto(valor, campo);
+        exigir(correo.contains("@"), campo + " debe contener @.");
+        return correo;
     }
 
     public static String texto(String valor, String campo) {
