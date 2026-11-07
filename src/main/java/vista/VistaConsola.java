@@ -27,70 +27,173 @@ public final class VistaConsola {
         Validaciones.requerido(actor, "Administrador");
     }
 
+
     public void iniciar() {
         System.out.println("LOS AROMOS — MENÚ DE TERMINAL");
         System.out.println("La fecha y hora de la sesión se ingresan como texto y se pueden avanzar con la opción 10.");
+
         solicitarFechaHora(false);
+
+        boolean controlesAutomaticosHabilitados = true;
+
         while (!finEntrada) {
+
+            if (controlesAutomaticosHabilitados) {
+                try {
+                    controlador.verificarControles(Fechas.ahora());
+                } catch (RuntimeException e) {
+                    controlesAutomaticosHabilitados = false;
+
+                    System.out.println(
+                            "ADVERTENCIA: Falló la verificación o el guardado automático: "
+                                    + e.getMessage()
+                    );
+                    System.out.println(
+                            "Se suspenden los reintentos automáticos para evitar un bucle."
+                    );
+                    System.out.println(
+                            "Puede usar la opción 9 para reintentar."
+                    );
+                }
+            }
+
             try {
-                controlador.verificarControles(Fechas.ahora());
                 actualizarActor();
-                System.out.println("\nActor actual: " + actor + " — " + descripcionActor(actor));
-                menu("Menú principal", new String[] {"Cambiar actor", "Comunidad y personal", "Reclamos",
-                        "Expensas y pagos", "Equipos y mantenimiento", "Visitas y accesos",
-                        "Reportes y alertas", "Guardar", "Verificar plazos y alertas", "Actualizar fecha y hora de la sesión"});
+
+                System.out.println(
+                        "\nActor actual: " + actor
+                                + " — " + descripcionActor(actor)
+                );
+
+                menu("Menú principal", new String[] {
+                        "Cambiar actor",
+                        "Comunidad y personal",
+                        "Reclamos",
+                        "Expensas y pagos",
+                        "Equipos y mantenimiento",
+                        "Visitas y accesos",
+                        "Reportes y alertas",
+                        "Guardar",
+                        "Verificar plazos y alertas",
+                        "Actualizar fecha y hora de la sesión"
+                });
+
                 int opcion = entero("Opción (0 para guardar y salir): ");
+
                 if (finEntrada) break;
+
                 switch (opcion) {
+
                     case 0:
-                        controlador.guardar();
-                        System.out.println("Datos guardados. Hasta luego.");
-                        return;
+                        try {
+                            controlador.guardar();
+                            System.out.println("Datos guardados. Hasta luego.");
+                            return;
+
+                        } catch (RuntimeException e) {
+                            System.out.println(
+                                    "ERROR: No se pudieron guardar los datos: "
+                                            + e.getMessage()
+                            );
+
+                            boolean salir = siNo(
+                                    "¿Salir sin guardar? (s/n): "
+                            );
+
+                            if (salir || finEntrada) {
+                                System.out.println(
+                                        "Saliendo sin confirmar el guardado de los cambios."
+                                );
+                                return;
+                            }
+                        }
+                        break;
+
                     case 1:
                         cambiarActor();
                         break;
+
                     case 2:
                         comunidad();
                         break;
+
                     case 3:
                         reclamos();
                         break;
+
                     case 4:
                         finanzas();
                         break;
+
                     case 5:
                         mantenimiento();
                         break;
+
                     case 6:
                         accesos();
                         break;
+
                     case 7:
-                        System.out.println(controlador.generarReportes(actor, Fechas.ahora()));
+                        System.out.println(
+                                controlador.generarReportes(
+                                        actor,
+                                        Fechas.ahora()
+                                )
+                        );
                         break;
+
                     case 8:
                         controlador.guardar();
-                        completada();
+
+                        controlesAutomaticosHabilitados = true;
+
+                        System.out.println(
+                                "Datos guardados correctamente."
+                        );
                         break;
+
                     case 9:
-                        controlador.verificarControles(Fechas.ahora());
-                        completada();
+                        controlador.verificarControles(
+                                Fechas.ahora()
+                        );
+
+                        controlesAutomaticosHabilitados = true;
+
+                        System.out.println(
+                                "Controles verificados y datos guardados."
+                        );
                         break;
+
                     case 10:
                         solicitarFechaHora(true);
-                        if (!finEntrada)
+
+                        if (!finEntrada) {
                             completada();
+                        }
                         break;
+
                     default:
                         System.out.println("Opción inválida.");
                 }
-            } catch (IllegalArgumentException | IllegalStateException e) {
+
+            } catch (RuntimeException e) {
                 System.out.println("ERROR: " + e.getMessage());
             }
         }
-        controlador.guardar();
-        System.out.println("\nFin de entrada. Datos guardados.");
-        // No se cierran System.in ni System.out: pertenecen al programa que inició la vista.
+
+        try {
+            controlador.guardar();
+            System.out.println("\nFin de entrada. Datos guardados.");
+
+        } catch (RuntimeException e) {
+            System.out.println(
+                    "\nERROR: No se pudieron guardar los datos al salir: "
+                            + e.getMessage()
+            );
+        }
+
     }
+
 
     private void actualizarActor() {
         for (Persona persona : controlador.listarActores()) {
