@@ -323,41 +323,133 @@ public final class VistaConsola {
         System.out.println("COMENTARIOS"); listar(reclamo.getComentarios());
     }
 
+
     private void registrarReclamo() {
-        int lote = lote(); if (lote == 0) return;
-        TipoReclamo tipo = seleccionar("TipoReclamo", TipoReclamo.values()); if (tipo == null) return;
-        String descripcion = leer("Descripción: "); if (finEntrada) return;
-        Reclamo nuevo = controlador.registrarReclamo(actor, lote, tipo, descripcion, Fechas.ahora());
+        List<Lote> lotes =
+                controlador.listarLotesParaReclamar(actor);
+
+        Lote loteSeleccionado = seleccionar("Mis lotes", lotes);
+        if (loteSeleccionado == null || finEntrada) return;
+
+        TipoReclamo tipo = seleccionar(
+                "TipoReclamo",
+                TipoReclamo.values()
+        );
+
+        if (tipo == null || finEntrada) return;
+
+        String descripcion = leer("Descripción: ");
+        if (finEntrada) return;
+
+        Reclamo nuevo = controlador.registrarReclamo(
+                actor,
+                loteSeleccionado.getNumero(),
+                tipo,
+                descripcion,
+                Fechas.ahora()
+        );
+
         System.out.println("Reclamo registrado: " + nuevo);
         completada();
     }
 
+
+
     private void asignarReclamo() {
-        Reclamo reclamo = reclamo(); if (reclamo == null) return;
+        controlador.verificarAdministrador(actor);
+
+        Reclamo reclamo = reclamo();
+        if (reclamo == null || finEntrada) return;
+
         List<Personal> habilitados = new ArrayList<>();
+
         for (Personal persona : controlador.listarPersonal()) {
-            if (persona.puedeAtender(reclamo.getTipo())) habilitados.add(persona);
+            if (persona.puedeAtender(reclamo.getTipo())) {
+                habilitados.add(persona);
+            }
         }
-        Personal responsable = seleccionar("Responsable", habilitados);
+
+        Personal responsable = seleccionar(
+                "Responsable",
+                habilitados
+        );
+
         if (responsable == null || finEntrada) return;
-        controlador.asignarReclamo(actor, reclamo.getNumero(), responsable.getLegajo(), Fechas.ahora());
+
+        controlador.asignarReclamo(
+                actor,
+                reclamo.getNumero(),
+                responsable.getLegajo(),
+                Fechas.ahora()
+        );
+
         completada();
     }
+
+
 
     private void actualizarEstado() {
-        Reclamo reclamo = reclamo(); if (reclamo == null) return;
-        EstadoReclamo estado = seleccionar("EstadoReclamo", EstadoReclamo.values()); if (estado == null) return;
-        String observacion = leer("Observación: "); if (finEntrada) return;
-        controlador.actualizarEstado(actor, reclamo.getNumero(), estado, Fechas.ahora(), observacion);
+        List<Reclamo> disponibles =
+                controlador.listarReclamosActualizables(actor);
+
+        if (disponibles.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "No tiene reclamos disponibles para actualizar."
+            );
+        }
+
+        Reclamo reclamo = seleccionar("Reclamo", disponibles);
+        if (reclamo == null || finEntrada) return;
+
+        EstadoReclamo estado = seleccionar(
+                "EstadoReclamo",
+                EstadoReclamo.values()
+        );
+
+        if (estado == null || finEntrada) return;
+
+        String observacion = leer("Observación: ");
+        if (finEntrada) return;
+
+        controlador.actualizarEstado(
+                actor,
+                reclamo.getNumero(),
+                estado,
+                Fechas.ahora(),
+                observacion
+        );
+
         completada();
     }
 
+
+
     private void reabrirReclamo() {
-        Reclamo reclamo = reclamo(); if (reclamo == null) return;
-        String observacion = leer("Motivo de reapertura: "); if (finEntrada) return;
-        controlador.reabrirReclamo(actor, reclamo.getNumero(), Fechas.ahora(), observacion);
+        List<Reclamo> disponibles =
+                controlador.listarReclamosReabribles(actor);
+
+        if (disponibles.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "No tiene reclamos resueltos disponibles para reabrir."
+            );
+        }
+
+        Reclamo reclamo = seleccionar("Reclamo", disponibles);
+        if (reclamo == null || finEntrada) return;
+
+        String observacion = leer("Motivo de reapertura: ");
+        if (finEntrada) return;
+
+        controlador.reabrirReclamo(
+                actor,
+                reclamo.getNumero(),
+                Fechas.ahora(),
+                observacion
+        );
+
         completada();
     }
+
 
     private void comentar() {
         Reclamo reclamo = reclamo(); if (reclamo == null) return;
@@ -387,6 +479,7 @@ public final class VistaConsola {
     }
 
     private void emitirExpensas() {
+        controlador.verificarAdministrador(actor);
         String actual = Fechas.hoy().substring(0, 7);
         String periodo = leer("Período aaaa-MM [" + actual + "]: ", actual);
         double presupuesto = decimal("Presupuesto mensual: "); if (finEntrada) return;
@@ -395,24 +488,50 @@ public final class VistaConsola {
     }
 
     private void consultarCuenta() {
-        int lote = lote(); if (lote == 0) return;
-        String fecha = fecha("Fecha de consulta"); if (finEntrada) return;
+
+        List<Lote> lotes = controlador.listarLotesConsultables(actor);
+
+        Lote loteSeleccionado = seleccionar("Lotes disponibles", lotes);
+
+        if (loteSeleccionado == null || finEntrada) return;
+
+        int lote = loteSeleccionado.getNumero();
+
+        String fecha = fecha("Fecha de consulta");
+        if (finEntrada) return;
+
         EstadoCuenta cuenta = controlador.consultarCuenta(actor, lote, fecha);
+
         System.out.println(cuenta);
-        System.out.println("PAGOS ORIGINALES"); listar(controlador.consultarPagos(actor, lote, fecha));
+
+        System.out.println("PAGOS ORIGINALES");
+        listar(controlador.consultarPagos(actor, lote, fecha));
+
         System.out.println("AJUSTES");
+
         for (AsientoAjuste ajuste : controlador.consultarAjustes(actor, lote, fecha)) {
-            System.out.println(ajuste.getFecha() + " | pago " + ajuste.getPagoCorregido().getNumero()
-                    + " | $" + ajuste.getMontoAjuste() + " | " + ajuste.getMotivo());
+            System.out.println(
+                    ajuste.getFecha() +
+                            " | pago " + ajuste.getPagoCorregido().getNumero() +
+                            " | $" + ajuste.getMontoAjuste() +
+                            " | " + ajuste.getMotivo()
+            );
         }
+
         System.out.println("IMPUTACIONES EFECTIVAS");
+
         for (ImputacionPago imputacion : cuenta.getImputacionesEfectivas()) {
-            System.out.println("Pago " + imputacion.getPago().getNumero() + " | período " + imputacion.getExpensa().getPeriodo()
-                    + " | intereses $" + imputacion.getMontoInteres() + " | capital $" + imputacion.getMontoCapital());
+            System.out.println(
+                    "Pago " + imputacion.getPago().getNumero() +
+                            " | período " + imputacion.getExpensa().getPeriodo() +
+                            " | intereses $" + imputacion.getMontoInteres() +
+                            " | capital $" + imputacion.getMontoCapital()
+            );
         }
     }
 
     private void registrarPago() {
+        controlador.verificarAdministrador(actor);
         int lote = lote(); if (lote == 0) return;
         String fecha = fecha("Fecha del pago"); double importe = decimal("Importe: ");
         MedioPago medio = seleccionar("MedioPago", MedioPago.values());
@@ -422,6 +541,7 @@ public final class VistaConsola {
     }
 
     private void ajustarPago() {
+        controlador.verificarAdministrador(actor);
         int lote = lote(); if (lote == 0) return;
         Pago pago = seleccionar("Pago a corregir", controlador.consultarPagos(actor, lote, Fechas.hoy()));
         if (pago == null) return;
@@ -457,6 +577,7 @@ public final class VistaConsola {
     }
 
     private void listarEquipos() {
+        controlador.verificarAdministrador(actor);
         System.out.println("EQUIPOS"); listar(controlador.listarEquipos());
         System.out.println("FALLAS"); listar(controlador.listarFallas());
         System.out.println("ÓRDENES");
@@ -466,6 +587,7 @@ public final class VistaConsola {
     }
 
     private void agregarCamara() {
+        controlador.verificarAdministrador(actor);
         String codigo = leer("Código: "), sector = leer("Sector: "), fecha = fecha("Fecha de instalación");
         String resolucion = leer("Resolución: "); int dias = entero("Días de grabación: ");
         if (finEntrada) return;
@@ -474,6 +596,7 @@ public final class VistaConsola {
     }
 
     private void agregarLuminaria() {
+        controlador.verificarAdministrador(actor);
         String codigo = leer("Código: "), sector = leer("Sector: "), fecha = fecha("Fecha de instalación");
         String lampara = leer("Tipo de lámpara: "); double potencia = decimal("Potencia W: ");
         if (finEntrada) return;
@@ -490,6 +613,7 @@ public final class VistaConsola {
     }
 
     private void generarOrden() {
+        controlador.verificarAdministrador(actor);
         Falla falla = seleccionar("Falla", controlador.listarFallas()); if (falla == null) return;
         String trabajo = leer("Trabajo a realizar: "); if (finEntrada) return;
         System.out.println(controlador.generarOrden(actor, falla.getNumero(), Fechas.ahora(), trabajo));
@@ -497,6 +621,7 @@ public final class VistaConsola {
     }
 
     private void asignarTecnico() {
+        controlador.verificarAdministrador(actor);
         OrdenMantenimiento orden = seleccionar("Orden", controlador.listarOrdenes()); if (orden == null) return;
         List<Personal> tecnicos = new ArrayList<>();
         for (Personal persona : controlador.listarPersonal()) {
@@ -508,13 +633,36 @@ public final class VistaConsola {
     }
 
     private void cerrarOrden() {
-        OrdenMantenimiento orden = seleccionar("Orden", controlador.listarOrdenes()); if (orden == null) return;
-        String detalle = leer("Detalle de reparación: "); if (finEntrada) return;
-        controlador.cerrarOrden(actor, orden.getNumero(), Fechas.ahora(), detalle);
+
+        List<OrdenMantenimiento> ordenes =
+                controlador.listarOrdenesCerrables(actor);
+
+        if (ordenes.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "No tiene órdenes disponibles para cerrar."
+            );
+        }
+
+        OrdenMantenimiento orden = seleccionar("Orden", ordenes);
+
+        if (orden == null || finEntrada) return;
+
+        String detalle = leer("Detalle de reparación:");
+
+        if (finEntrada) return;
+
+        controlador.cerrarOrden(
+                actor,
+                orden.getNumero(),
+                Fechas.ahora(),
+                detalle
+        );
+
         completada();
     }
 
     private void fueraServicio() {
+        controlador.verificarAdministrador(actor);
         Equipo equipo = seleccionar("Equipo", controlador.listarEquipos()); if (equipo == null || finEntrada) return;
         controlador.marcarEquipoFueraServicio(actor, equipo.getCodigo());
         completada();
@@ -543,16 +691,71 @@ public final class VistaConsola {
         }
     }
 
+
     private void listarAccesos() {
-        System.out.println("AUTORIZACIONES"); listar(controlador.listarAutorizaciones());
-        System.out.println("INGRESOS Y EGRESOS"); listar(controlador.listarAccesos());
+        controlador.verificarAdministrador(actor);
+
+        System.out.println("AUTORIZACIONES");
+        listar(controlador.listarAutorizaciones());
+
+        System.out.println("INGRESOS Y EGRESOS");
+        listar(controlador.listarAccesos());
     }
 
+
+
     private void proveedorHabitual() {
-        Persona persona = persona(); if (persona == null || finEntrada) return;
-        controlador.identificarVisitante(actor, persona.getDocumento(), TipoVisitante.PROVEEDOR, true);
+        controlador.verificarAdministrador(actor);
+
+        menu("Registrar proveedor habitual", new String[] {
+                "Seleccionar persona existente",
+                "Registrar nuevo proveedor"
+        });
+
+        int opcion = entero("Opción (0 para cancelar): ");
+        if (opcion == 0 || finEntrada) return;
+
+        Persona persona;
+
+        switch (opcion) {
+            case 1:
+                persona = persona();
+                if (persona == null || finEntrada) return;
+                break;
+
+            case 2:
+                String documento = leer("Documento: ");
+                String nombre = leer("Nombre: ");
+                String apellido = leer("Apellido: ");
+                String telefono = leer("Teléfono: ");
+                String correo = leer("Correo electrónico: ");
+
+                if (finEntrada) return;
+
+                persona = controlador.agregarPersona(
+                        actor,
+                        documento,
+                        nombre,
+                        apellido,
+                        telefono,
+                        correo
+                );
+                break;
+
+            default:
+                throw new IllegalArgumentException("Opción inválida.");
+        }
+
+        controlador.identificarVisitante(
+                actor,
+                persona.getDocumento(),
+                TipoVisitante.PROVEEDOR,
+                true
+        );
+
         completada();
     }
+
 
     private void autorizarVisita() {
         int lote = lote(); if (lote == 0) return;

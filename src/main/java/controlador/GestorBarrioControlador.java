@@ -106,6 +106,92 @@ public class GestorBarrioControlador {
         return lotesDelTitular;
     }
 
+    public List<Lote> listarLotesConsultables(Persona actor) {
+        validarActor(actor);
+
+        if (actor instanceof Administrador) {
+            return new ArrayList<>(barrio.getLotes());
+        }
+
+        List<Lote> misLotes = listarLotesDelTitular(actor);
+
+        Validaciones.exigir(
+                !misLotes.isEmpty(),
+                "Solo el titular o el administrador puede consultar cuentas."
+        );
+
+        return misLotes;
+    }
+
+
+    public List<Lote> listarLotesParaAutorizarVisitas(Persona actor) {
+        validarActor(actor);
+
+        List<Lote> resultado = new ArrayList<>();
+
+        for (Lote lote : barrio.getLotes()) {
+            if (lote.puedeAutorizarVisita(actor)) {
+                resultado.add(lote);
+            }
+        }
+
+        Validaciones.exigir(!resultado.isEmpty(),
+                "Solo un titular o residente registrado puede autorizar visitas.");
+
+        return resultado;
+    }
+
+    public List<Lote> listarLotesParaReclamar(Persona actor) {
+        validarActor(actor);
+
+        List<Lote> resultado = new ArrayList<>();
+
+        for (Lote lote : barrio.getLotes()) {
+            if (lote.puedeReclamar(actor)) {
+                resultado.add(lote);
+            }
+        }
+
+        Validaciones.exigir(!resultado.isEmpty(),
+                "No tiene permisos para presentar reclamos en ningún lote.");
+
+        return resultado;
+    }
+
+    public List<Reclamo> listarReclamosActualizables(Persona actor) {
+        validarActor(actor);
+
+        List<Reclamo> resultado = new ArrayList<>();
+
+        for (Reclamo reclamo : reclamos.listarTodos()) {
+            boolean autorizado = actor instanceof Administrador
+                    || actor.equals(reclamo.getResponsableAsignado());
+
+            if (autorizado
+                    && reclamo.getEstado() != EstadoReclamo.CERRADO) {
+                resultado.add(reclamo);
+            }
+        }
+
+        return resultado;
+    }
+
+    public List<Reclamo> listarReclamosReabribles(Persona actor) {
+        validarActor(actor);
+
+        List<Reclamo> resultado = new ArrayList<>();
+
+        for (Reclamo reclamo : reclamos.listarTodos()) {
+            if (reclamo.getEstado() == EstadoReclamo.RESUELTO
+                    && reclamo.getLote().puedeReclamar(actor)) {
+                resultado.add(reclamo);
+            }
+        }
+
+        return resultado;
+    }
+
+
     public List<Personal> listarPersonal() {
         return barrio.getPersonal();
     }
@@ -119,6 +205,23 @@ public class GestorBarrioControlador {
     }
     public List<OrdenMantenimiento> listarOrdenes() {
         return barrio.getOrdenes();
+    }
+
+    public List<OrdenMantenimiento> listarOrdenesCerrables(Persona actor) {
+        validarActor(actor);
+
+        List<OrdenMantenimiento> resultado = new ArrayList<>();
+
+        for (OrdenMantenimiento orden : barrio.getOrdenes()) {
+
+            if (actor instanceof Administrador
+                    || actor == orden.getEmpleadoAsignado()) {
+
+                resultado.add(orden);
+            }
+        }
+
+        return resultado;
     }
 
     public List<AutorizacionAcceso> listarAutorizaciones() {
