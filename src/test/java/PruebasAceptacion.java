@@ -527,6 +527,7 @@ public final class PruebasAceptacion {
             RelojSesion a = RelojSesion.getInstancia(), b = RelojSesion.getInstancia();
             exigir(a == b, "Ambas referencias apuntan al mismo objeto.");
             a.establecer("2026-11-03 10:00");
+            exigir(b.tieneMomento(), "La sesión queda iniciada para todas las referencias.");
             exigir(b.ahora().equals("2026-11-03 10:00") && b.hoy().equals("2026-11-03"), "El cambio se ve desde cualquier referencia.");
             rechaza(() -> b.avanzar("2026-11-03 09:59"));
             b.avanzar("2026-11-04 08:00");
