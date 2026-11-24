@@ -1,7 +1,7 @@
 package principal;
 
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import vista.VistaConsola;
 
 public class Main {
@@ -19,11 +19,11 @@ public class Main {
             GestorBarrioControlador controlador = CreadorControlador.crearControlador(ruta);
             if (resumen) {
                 if (fechaHora == null) throw new IllegalArgumentException("Para obtener el resumen indique --fecha=aaaa-MM-dd HH:mm.");
-                Fechas.establecerMomento(fechaHora);
-                controlador.verificarControles(Fechas.ahora());
+                RelojSesion.getInstancia().establecer(fechaHora);
+                controlador.verificarControles(RelojSesion.getInstancia().ahora());
                 System.out.println("Fuente: DEMO: personas ficticias");
                 System.out.println("Barrio: " + controlador.getNombreBarrio() + " | lotes: " + controlador.cantidadLotes());
-                System.out.println(controlador.generarReportes(controlador.getAdministrador(), Fechas.ahora()));
+                System.out.println(controlador.generarReportes(controlador.getAdministrador(), RelojSesion.getInstancia().ahora()));
             } else {
                 VistaConsola vista = new VistaConsola(controlador);
                 vista.iniciar();

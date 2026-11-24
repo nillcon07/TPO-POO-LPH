@@ -3,8 +3,6 @@ package modelo.comun;
 /** Fechas en String y cálculos con enteros: calendario gregoriano, sin bibliotecas de fechas. */
 // Clase de utilidad final para manejo, validación y comparación de fechas y horas representadas en formato String sin librerías externas.
 public final class Fechas {
-    private static String momentoActual;
-
     private Fechas() { }
 
     private static boolean digitos(String texto) {
@@ -115,15 +113,4 @@ public final class Fechas {
                 "La fecha no puede ser anterior al último evento.");
     }
 
-    public static void establecerMomento(String valor) {
-        momento(valor);
-        momentoActual = valor;
-    }
-
-    public static String ahora() {
-        modelo.comun.Validaciones.exigir(momentoActual != null, "Primero indique la fecha y hora de la sesión.");
-        return momentoActual;
-    }
-
-    public static String hoy() { return dia(ahora()); }
 }

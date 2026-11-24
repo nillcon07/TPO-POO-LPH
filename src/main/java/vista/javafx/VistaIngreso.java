@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.personas.Persona;
 
 /** Pantalla inicial: se elige el usuario y la fecha y hora de la sesión. */
@@ -37,8 +37,8 @@ final class VistaIngreso {
 
         Button ingresar = Componentes.boton("Ingresar", () -> {
             Persona elegido = Formulario.elegido(actor, "un usuario");
-            Fechas.establecerMomento(fecha.getText().trim());
-            controlador.verificarControles(Fechas.ahora());
+            RelojSesion.getInstancia().establecer(fecha.getText().trim());
+            controlador.verificarControles(RelojSesion.getInstancia().ahora());
             aplicacion.mostrarPrincipal(elegido);
         });
         ingresar.setDefaultButton(true);
@@ -59,7 +59,7 @@ final class VistaIngreso {
     // Si ya había una sesión abierta se conserva su fecha; si no, se propone la del sistema.
     private static String fechaInicial() {
         try {
-            return Fechas.ahora();
+            return RelojSesion.getInstancia().ahora();
         } catch (IllegalArgumentException e) {
             return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         }

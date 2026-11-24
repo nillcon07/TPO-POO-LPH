@@ -4,7 +4,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.mantenimiento.*;
 import modelo.personas.*;
 
@@ -83,14 +83,14 @@ final class PanelMantenimiento extends PanelBase {
         TextField inicio = f.texto("Inicio (aaaa-MM-dd HH:mm, vacío si se desconoce)", "");
         TextArea descripcion = f.area("Descripción");
         if (!f.mostrar()) return;
-        operar(() -> controlador.registrarFalla(actor, equipo.getCodigo(), Fechas.ahora(), inicio.getText().trim(),
+        operar(() -> controlador.registrarFalla(actor, equipo.getCodigo(), RelojSesion.getInstancia().ahora(), inicio.getText().trim(),
                 descripcion.getText()));
     }
 
     private void agregarCamara() {
         Formulario f = new Formulario("Agregar cámara");
         TextField codigo = f.texto("Código", ""), sector = f.texto("Sector", "");
-        TextField fecha = f.texto("Fecha de instalación", Fechas.hoy()), resolucion = f.texto("Resolución", "");
+        TextField fecha = f.texto("Fecha de instalación", RelojSesion.getInstancia().hoy()), resolucion = f.texto("Resolución", "");
         TextField dias = f.texto("Días de grabación", "");
         if (!f.mostrar()) return;
         operar(() -> controlador.agregarCamara(actor, codigo.getText(), sector.getText(), fecha.getText(),
@@ -100,7 +100,7 @@ final class PanelMantenimiento extends PanelBase {
     private void agregarLuminaria() {
         Formulario f = new Formulario("Agregar luminaria");
         TextField codigo = f.texto("Código", ""), sector = f.texto("Sector", "");
-        TextField fecha = f.texto("Fecha de instalación", Fechas.hoy()), lampara = f.texto("Tipo de lámpara", "");
+        TextField fecha = f.texto("Fecha de instalación", RelojSesion.getInstancia().hoy()), lampara = f.texto("Tipo de lámpara", "");
         TextField potencia = f.texto("Potencia W", "");
         if (!f.mostrar()) return;
         operar(() -> controlador.agregarLuminaria(actor, codigo.getText(), sector.getText(), fecha.getText(),
@@ -117,7 +117,7 @@ final class PanelMantenimiento extends PanelBase {
         Formulario f = new Formulario("Generar orden - Falla " + falla.getNumero());
         TextArea trabajo = f.area("Trabajo a realizar");
         if (!f.mostrar()) return;
-        operar(() -> controlador.generarOrden(actor, falla.getNumero(), Fechas.ahora(), trabajo.getText()));
+        operar(() -> controlador.generarOrden(actor, falla.getNumero(), RelojSesion.getInstancia().ahora(), trabajo.getText()));
     }
 
     private void asignarTecnico() {
@@ -134,6 +134,6 @@ final class PanelMantenimiento extends PanelBase {
         Formulario f = new Formulario("Cerrar orden " + orden.getNumero());
         TextArea detalle = f.area("Detalle de reparación");
         if (!f.mostrar()) return;
-        operar(() -> controlador.cerrarOrden(actor, orden.getNumero(), Fechas.ahora(), detalle.getText()));
+        operar(() -> controlador.cerrarOrden(actor, orden.getNumero(), RelojSesion.getInstancia().ahora(), detalle.getText()));
     }
 }
