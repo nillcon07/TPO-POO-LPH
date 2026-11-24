@@ -21,8 +21,8 @@ public final class VistaConsola {
 
     public VistaConsola(GestorBarrioControlador controlador) {
         this.controlador = Validaciones.requerido(controlador, "Controlador");
-        for (Personal integrante : controlador.listarPersonal()) {
-            if (integrante instanceof Administrador) { actor = integrante; break; }
+        for (Persona candidato : controlador.listarActores()) {
+            if (controlador.esAdministrador(candidato)) { actor = candidato; break; }
         }
         Validaciones.requerido(actor, "Administrador");
     }
@@ -281,14 +281,14 @@ public final class VistaConsola {
 
     private void listarComunidad() {
         controlador.verificarAdministrador(actor);
-        System.out.println("LOTES (" + controlador.listarLotes().size() + "/150)");
-        for (Lote lote : controlador.listarLotes()) {
+        System.out.println("LOTES (" + controlador.cantidadLotes() + "/150)");
+        for (Lote lote : controlador.listarLotes(actor)) {
             System.out.println(lote + " | " + lote.getSuperficie() + " m²");
             System.out.println("  Residentes: " + lote.getResidentes());
             System.out.println("  Permisos de reclamo: " + lote.getPersonasAutorizadasReclamo());
         }
         System.out.println("PERSONAL");
-        for (Personal persona : controlador.listarPersonal()) {
+        for (Personal persona : controlador.listarPersonal(actor)) {
             System.out.println(persona.getLegajo() + " | " + descripcionActor(persona) + " | " + persona);
         }
     }
@@ -464,13 +464,8 @@ public final class VistaConsola {
         Reclamo reclamo = reclamo();
         if (reclamo == null || finEntrada) return;
 
-        List<Personal> habilitados = new ArrayList<>();
-
-        for (Personal persona : controlador.listarPersonal()) {
-            if (persona.puedeAtender(reclamo.getTipo())) {
-                habilitados.add(persona);
-            }
-        }
+        List<Personal> habilitados =
+                controlador.listarResponsablesHabilitados(actor, reclamo.getTipo());
 
         Personal responsable = seleccionar(
                 "Responsable",
@@ -680,11 +675,10 @@ public final class VistaConsola {
     }
 
     private void listarEquipos() {
-        controlador.verificarAdministrador(actor);
         System.out.println("EQUIPOS"); listar(controlador.listarEquipos());
-        System.out.println("FALLAS"); listar(controlador.listarFallas());
+        System.out.println("FALLAS"); listar(controlador.listarFallas(actor));
         System.out.println("ÓRDENES");
-        for (OrdenMantenimiento orden : controlador.listarOrdenes()) {
+        for (OrdenMantenimiento orden : controlador.listarOrdenes(actor)) {
             System.out.println(orden + " | técnico " + orden.getEmpleadoAsignado() + " | reparación " + orden.getDetalleReparacion());
         }
     }
@@ -717,7 +711,7 @@ public final class VistaConsola {
 
     private void generarOrden() {
         controlador.verificarAdministrador(actor);
-        Falla falla = seleccionar("Falla", controlador.listarFallas()); if (falla == null) return;
+        Falla falla = seleccionar("Falla", controlador.listarFallas(actor)); if (falla == null) return;
         String trabajo = leer("Trabajo a realizar: "); if (finEntrada) return;
         System.out.println(controlador.generarOrden(actor, falla.getNumero(), Fechas.ahora(), trabajo));
         completada();
@@ -725,12 +719,9 @@ public final class VistaConsola {
 
     private void asignarTecnico() {
         controlador.verificarAdministrador(actor);
-        OrdenMantenimiento orden = seleccionar("Orden", controlador.listarOrdenes()); if (orden == null) return;
-        List<Personal> tecnicos = new ArrayList<>();
-        for (Personal persona : controlador.listarPersonal()) {
-            if (persona instanceof EmpleadoMantenimiento) tecnicos.add(persona);
-        }
-        Personal tecnico = seleccionar("Técnico", tecnicos); if (tecnico == null || finEntrada) return;
+        OrdenMantenimiento orden = seleccionar("Orden", controlador.listarOrdenes(actor)); if (orden == null) return;
+        List<EmpleadoMantenimiento> tecnicos = controlador.listarTecnicos(actor);
+        EmpleadoMantenimiento tecnico = seleccionar("Técnico", tecnicos); if (tecnico == null || finEntrada) return;
         controlador.asignarOrden(actor, orden.getNumero(), tecnico.getLegajo());
         completada();
     }
@@ -796,13 +787,13 @@ public final class VistaConsola {
 
 
     private void listarAccesos() {
-        controlador.verificarAdministrador(actor);
-
         System.out.println("AUTORIZACIONES");
-        listar(controlador.listarAutorizaciones());
+        listar(controlador.listarAutorizaciones(actor));
 
-        System.out.println("INGRESOS Y EGRESOS");
-        listar(controlador.listarAccesos());
+        if (controlador.esAdministrador(actor) || controlador.esGuardiaPorteria(actor)) {
+            System.out.println("INGRESOS Y EGRESOS");
+            listar(controlador.listarAccesos(actor));
+        }
     }
 
 
@@ -861,7 +852,9 @@ public final class VistaConsola {
 
 
     private void autorizarVisita() {
-        int lote = lote(); if (lote == 0) return;
+        Lote elegido = seleccionar("Lote", controlador.listarLotesParaAutorizarVisitas(actor));
+        if (elegido == null) return;
+        int lote = elegido.getNumero();
         Persona persona = persona(); if (persona == null) return;
         TipoVisitante tipo = seleccionar("TipoVisitante", TipoVisitante.values()); if (tipo == null) return;
         String inicio = fecha("Fecha de inicio"), fin = fecha("Fecha de fin");
@@ -898,7 +891,7 @@ public final class VistaConsola {
     private Persona persona() { return seleccionar("Persona existente", controlador.listarPersonas()); }
     private Reclamo reclamo() { return seleccionar("Reclamo", controlador.listarReclamos(actor)); }
     private int lote() {
-        Lote seleccionado = seleccionar("Lote", controlador.listarLotes());
+        Lote seleccionado = seleccionar("Lote", controlador.listarLotes(actor));
         if (seleccionado == null) return 0;
         return seleccionado.getNumero();
     }
