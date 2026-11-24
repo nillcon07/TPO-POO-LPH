@@ -77,8 +77,15 @@ public class Reclamo implements Serializable {
     }
     public void agregarComentario(Persona autor, String fecha, String texto) {
         Fechas.noAnterior(this.fecha, fecha);
-        Validaciones.exigir(autor instanceof Personal || lote.puedeReclamar(autor), "El autor no puede comentar este reclamo.");
+        Validaciones.exigir(puedeConsultar(autor), "El autor no puede comentar este reclamo.");
         comentarios.add(new Comentario(fecha, autor, texto));
+    }
+    /** Experto en información: el administrador, el responsable asignado o quien puede reclamar por el lote. */
+    public boolean puedeConsultar(Persona actor) {
+        if (actor == null) return false;
+        return actor instanceof Administrador
+                || responsableAsignado != null && responsableAsignado.equals(actor)
+                || lote.puedeReclamar(actor);
     }
     public boolean puedeCerrar(String fecha) {
         return estado == EstadoReclamo.RESUELTO && Fechas.minutosEntre(ultimaResolucion(), fecha) > 5 * 24 * 60;

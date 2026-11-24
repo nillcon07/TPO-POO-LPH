@@ -43,6 +43,42 @@ public class GestorBarrioControlador {
         admin(actor);
     }
 
+    /* ---------- Consultas de rol: la vista las usa para mostrar u ocultar opciones,
+       pero cada operación vuelve a validar el permiso (la regla no depende de la interfaz). ---------- */
+
+    public boolean esAdministrador(Persona actor) {
+        return actor instanceof Administrador && actor == barrio.getAdministrador();
+    }
+
+    public boolean esGuardiaPorteria(Persona actor) {
+        return actor instanceof Guardia && perteneceAlPersonal((Personal) actor)
+                && ((Guardia) actor).getPuestoAsignado() == PuestoGuardia.PORTERIA;
+    }
+
+    public boolean esEmpleadoMantenimiento(Persona actor) {
+        return actor instanceof EmpleadoMantenimiento && perteneceAlPersonal((Personal) actor);
+    }
+
+    public boolean esVecino(Persona actor) {
+        return actor != null && barrio.esVecino(actor);
+    }
+
+    public boolean esTitular(Persona actor) {
+        if (actor == null) return false;
+        for (Lote lote : barrio.getLotes()) if (lote.getTitular().equals(actor)) return true;
+        return false;
+    }
+
+    private boolean perteneceAlPersonal(Personal actor) {
+        for (Personal integrante : barrio.getPersonal()) if (integrante == actor) return true;
+        return false;
+    }
+
+    private void exigirGuardiaPorteria(Persona actor) {
+        Validaciones.requerido(actor, "Actor");
+        Validaciones.exigir(esGuardiaPorteria(actor), "Se requiere un guardia de portería del barrio.");
+    }
+
     private void validarActor(Persona actor) {
         Validaciones.requerido(actor, "Actor");
         if (actor instanceof Personal)
@@ -60,6 +96,10 @@ public class GestorBarrioControlador {
 
     public String getNombreBarrio() {
         return barrio.getNombre();
+    }
+
+    public Administrador getAdministrador() {
+        return barrio.getAdministrador();
     }
 
     public List<Persona> listarPersonas() {
@@ -88,8 +128,13 @@ public class GestorBarrioControlador {
         return new ArrayList<>(porDocumento.values());
     }
 
-    public List<Lote> listarLotes() {
+    public List<Lote> listarLotes(Persona actor) {
+        admin(actor);
         return barrio.getLotes();
+    }
+
+    public int cantidadLotes() {
+        return barrio.getLotes().size();
     }
 
     public List<Lote> listarLotesDelTitular(Persona actor) {
@@ -192,19 +237,47 @@ public class GestorBarrioControlador {
     }
 
 
-    public List<Personal> listarPersonal() {
+    public List<Personal> listarPersonal(Persona actor) {
+        admin(actor);
         return barrio.getPersonal();
     }
 
+    /** Personal habilitado para atender un tipo de reclamo (solo lo usa el administrador al asignar). */
+    public List<Personal> listarResponsablesHabilitados(Persona actor, TipoReclamo tipo) {
+        admin(actor);
+        List<Personal> resultado = new ArrayList<>();
+        for (Personal integrante : barrio.getPersonal()) if (integrante.puedeAtender(tipo)) resultado.add(integrante);
+        return resultado;
+    }
+
+    public List<EmpleadoMantenimiento> listarTecnicos(Persona actor) {
+        admin(actor);
+        List<EmpleadoMantenimiento> resultado = new ArrayList<>();
+        for (Personal integrante : barrio.getPersonal())
+            if (integrante instanceof EmpleadoMantenimiento) resultado.add((EmpleadoMantenimiento) integrante);
+        return resultado;
+    }
+
+    /** Los equipos son públicos dentro del barrio: cualquier vecino o guardia puede informar fallas. */
     public List<Equipo> listarEquipos() {
         return barrio.getEquipos();
     }
 
-    public List<Falla> listarFallas() {
+    public List<Falla> listarFallas(Persona actor) {
+        validarActor(actor);
+        Validaciones.exigir(esAdministrador(actor) || esEmpleadoMantenimiento(actor),
+                "Solo el administrador o el personal de mantenimiento puede consultar las fallas.");
         return barrio.getFallas();
     }
-    public List<OrdenMantenimiento> listarOrdenes() {
-        return barrio.getOrdenes();
+
+    public List<OrdenMantenimiento> listarOrdenes(Persona actor) {
+        validarActor(actor);
+        if (esAdministrador(actor)) return barrio.getOrdenes();
+        Validaciones.exigir(esEmpleadoMantenimiento(actor),
+                "Solo el administrador o el personal de mantenimiento puede consultar las órdenes.");
+        List<OrdenMantenimiento> propias = new ArrayList<>();
+        for (OrdenMantenimiento orden : barrio.getOrdenes()) if (orden.getEmpleadoAsignado() == actor) propias.add(orden);
+        return propias;
     }
 
     public List<OrdenMantenimiento> listarOrdenesCerrables(Persona actor) {
@@ -214,9 +287,10 @@ public class GestorBarrioControlador {
 
         for (OrdenMantenimiento orden : barrio.getOrdenes()) {
 
-            if (actor instanceof Administrador
-                    || actor == orden.getEmpleadoAsignado()) {
+            boolean autorizado = actor instanceof Administrador
+                    || actor == orden.getEmpleadoAsignado();
 
+            if (autorizado && orden.getFechaCierre() == null) {
                 resultado.add(orden);
             }
         }
@@ -224,11 +298,21 @@ public class GestorBarrioControlador {
         return resultado;
     }
 
-    public List<AutorizacionAcceso> listarAutorizaciones() {
-        return barrio.getAutorizaciones();
+    /** Administrador y portería ven todas; un vecino solo las de los lotes donde puede autorizar visitas. */
+    public List<AutorizacionAcceso> listarAutorizaciones(Persona actor) {
+        validarActor(actor);
+        if (esAdministrador(actor) || esGuardiaPorteria(actor)) return barrio.getAutorizaciones();
+        Validaciones.exigir(esVecino(actor), "No tiene permiso para consultar autorizaciones.");
+        List<AutorizacionAcceso> propias = new ArrayList<>();
+        for (AutorizacionAcceso autorizacion : barrio.getAutorizaciones())
+            if (autorizacion.getLoteVisitado().puedeAutorizarVisita(actor)) propias.add(autorizacion);
+        return propias;
     }
 
-    public List<RegistroAcceso> listarAccesos() {
+    public List<RegistroAcceso> listarAccesos(Persona actor) {
+        validarActor(actor);
+        Validaciones.exigir(esAdministrador(actor) || esGuardiaPorteria(actor),
+                "Solo el administrador o la portería puede consultar ingresos y egresos.");
         return barrio.getRegistrosAcceso();
     }
 
@@ -291,7 +375,7 @@ public class GestorBarrioControlador {
         validarActor(actor);
         List<Reclamo> resultado = new ArrayList<>();
         for (Reclamo reclamo : reclamos.listarTodos()) {
-            if (actor instanceof Personal || reclamo.getLote().puedeReclamar(actor))
+            if (reclamo.puedeConsultar(actor))
                 resultado.add(reclamo);
         }
         return resultado;
@@ -299,7 +383,7 @@ public class GestorBarrioControlador {
     public Reclamo consultarReclamo(Persona actor, int numero) {
         validarActor(actor);
         Reclamo reclamo = reclamos.buscarPorNumero(numero);
-        Validaciones.exigir(actor instanceof Personal || reclamo.getLote().puedeReclamar(actor), "No puede consultar ese reclamo.");
+        Validaciones.exigir(reclamo.puedeConsultar(actor), "No puede consultar ese reclamo.");
         return reclamo;
     }
     public void asignarReclamo(Persona actor, int numero, String legajo, String fecha) {
@@ -327,8 +411,7 @@ public class GestorBarrioControlador {
     }
 
     public void agregarComentario(Persona actor, int numero, String fecha, String comentario) {
-        validarActor(actor);
-        Reclamo reclamo = reclamos.buscarPorNumero(numero);
+        Reclamo reclamo = consultarReclamo(actor, numero);
         reclamo.agregarComentario(actor, fecha, comentario);
         reclamos.guardar(reclamo);
         guardar();
@@ -435,15 +518,17 @@ public class GestorBarrioControlador {
     }
 
     public List<AutorizacionAcceso> buscarAutorizaciones(Guardia actor, String documento, String fecha) {
-        barrio.exigirPersonal(actor);
+        exigirGuardiaPorteria(actor);
         return barrio.autorizacionesVigentes(documento, fecha);
     }
 
     public RegistroAcceso registrarIngreso(Guardia actor, int autorizacion, String fecha) {
+        exigirGuardiaPorteria(actor);
         return confirmar(barrio.registrarIngreso(actor, autorizacion, fecha));
     }
 
     public RegistroAcceso registrarEgreso(Guardia actor, String documento, String fecha) {
+        exigirGuardiaPorteria(actor);
         return confirmar(barrio.registrarEgreso(actor, documento, fecha));
     }
 

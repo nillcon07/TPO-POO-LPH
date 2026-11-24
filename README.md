@@ -27,6 +27,15 @@
       3. El sistema iniciará en la terminal solicitando la fecha y hora de la sesión (en formato `aaaa-MM-dd HH:mm`) para inicializar el reloj del sistema de simulación.
       4. Utilizar las opciones numéricas del menú principal para interactuar con los diferentes módulos como Administrador, Guardia o Empleado.
     
+    - Ejecución de la Interfaz Gráfica (JavaFX):
+      1. Desde IntelliJ: ejecutar el método `main` de `principal.LanzadorFX` (no hace falta configurar módulos; JavaFX llega por Maven).
+      2. Desde la terminal: `mvn javafx:run`.
+      3. En la pantalla de ingreso elegir el usuario (Administrador, Titular, Residente, Guardia o Técnico) y la fecha y hora de la sesión.
+      4. Cada usuario ve solo las pestañas que su rol permite; aun así, cada operación se vuelve a validar en el controlador y el modelo.
+      5. Los datos se guardan en `datos/barrio.dat` al pulsar "Guardar" o al cerrar la ventana.
+
+    - Ejecución de la Interfaz por Terminal: ejecutar el `main` de `principal.Main`.
+
     - Ejecución de Pruebas de Aceptación:
       1. Ubicar la clase `PruebasAceptacion.java` dentro del directorio de código fuente.
       2. Hacer clic derecho sobre la clase y seleccionar "Run 'PruebasAceptacion'" para validar de forma automatizada los casos de uso y reglas de negocio del sistema.

@@ -485,6 +485,44 @@ public final class PruebasAceptacion {
             exigir(rechazado, "El archivo corrupto debe ser rechazado.");
             exigir(Files.readString(ruta).equals("NO ES UN BARRIO"), "No se reemplaza por datos demo");
         });
+        probar("Permisos: el personal solo ve y comenta los reclamos que tiene asignados", () -> {
+            Contexto x = new Contexto(); Reclamo r = x.reclamo(TipoReclamo.MANTENIMIENTO);
+            exigir(x.c.listarReclamos(x.guardia).isEmpty(), "Un guardia no ve reclamos ajenos.");
+            rechaza(() -> x.c.consultarReclamo(x.guardia, r.getNumero()));
+            rechaza(() -> x.c.agregarComentario(x.guardia, r.getNumero(), "2026-01-01 10:00", "Sin asignación"));
+            rechaza(() -> x.c.agregarComentario(x.tecnico, r.getNumero(), "2026-01-01 10:00", "Todavía no asignado"));
+            x.c.asignarReclamo(x.admin, r.getNumero(), "M001", "2026-01-01 10:00");
+            exigir(x.c.listarReclamos(x.tecnico).size() == 1, "El responsable ve su reclamo.");
+            x.c.agregarComentario(x.tecnico, r.getNumero(), "2026-01-01 11:00", "Voy en camino");
+            exigir(x.c.listarReclamos(x.admin).size() == 1, "El administrador ve todos.");
+            exigir(x.c.listarReclamos(x.residente).isEmpty(), "Un residente sin permiso no ve los reclamos del lote.");
+        });
+        probar("Permisos: consultas de lotes, personal, fallas y órdenes protegidas en el controlador", () -> {
+            Contexto x = new Contexto();
+            rechaza(() -> x.c.listarLotes(x.titular)); rechaza(() -> x.c.listarPersonal(x.guardia));
+            rechaza(() -> x.c.listarFallas(x.titular)); rechaza(() -> x.c.listarOrdenes(x.guardia));
+            exigir(x.c.listarLotes(x.admin).size() == 2 && x.c.listarPersonal(x.admin).size() == 3, "El administrador consulta todo.");
+            Falla f = x.c.registrarFalla(x.guardia, "CAM-01", "2026-01-01 10:00", "", "Sin imagen");
+            OrdenMantenimiento o = x.c.generarOrden(x.admin, f.getNumero(), "2026-01-01 11:00", "Revisar");
+            exigir(x.c.listarOrdenes(x.tecnico).isEmpty(), "El técnico no ve órdenes ajenas.");
+            x.c.asignarOrden(x.admin, o.getNumero(), "M001");
+            exigir(x.c.listarOrdenes(x.tecnico).size() == 1 && x.c.listarFallas(x.tecnico).size() == 1, "El técnico ve su orden.");
+            x.c.cerrarOrden(x.tecnico, o.getNumero(), "2026-01-01 12:00", "Reparada");
+            exigir(x.c.listarOrdenesCerrables(x.tecnico).isEmpty(), "Una orden cerrada no se ofrece para cerrar.");
+        });
+        probar("Permisos: autorizaciones por lote y operaciones de portería", () -> {
+            Contexto x = new Contexto(); Guardia ronda = x.c.agregarGuardia(x.admin, "108", "G002", "2026-01-01", Turno.TARDE, PuestoGuardia.RONDA);
+            x.c.autorizarVisita(x.titular, "106", TipoVisitante.VISITA, 1, "2026-01-02", "2026-01-02", "08:00", "20:00", false);
+            x.c.autorizarVisita(x.personas.buscarPorDocumento("102"), "106", TipoVisitante.VISITA, 2, "2026-01-02", "2026-01-02", "08:00", "20:00", false);
+            exigir(x.c.listarAutorizaciones(x.titular).size() == 1, "El titular ve solo las de su lote.");
+            exigir(x.c.listarAutorizaciones(x.residente).size() == 1, "El residente ve las de su lote.");
+            exigir(x.c.listarAutorizaciones(x.guardia).size() == 2 && x.c.listarAutorizaciones(x.admin).size() == 2, "Portería y administración ven todas.");
+            rechaza(() -> x.c.listarAutorizaciones(x.tecnico));
+            rechaza(() -> x.c.listarAccesos(x.titular)); rechaza(() -> x.c.listarAccesos(ronda));
+            rechaza(() -> x.c.buscarAutorizaciones(ronda, "106", "2026-01-02 10:00"));
+            rechaza(() -> x.c.listarLotesParaAutorizarVisitas(x.tecnico));
+            exigir(x.c.esGuardiaPorteria(x.guardia) && !x.c.esGuardiaPorteria(ronda), "Rol de portería.");
+        });
         registrar("\nResultado: " + correctas + " escenarios correctos, " + fallidas + " fallidos, " + comprobaciones + " comprobaciones.");
         Files.writeString(Paths.get("target/pruebas-aceptacion.txt"), informe);
         if (fallidas > 0) throw new IllegalStateException("Fallaron " + fallidas + " escenarios.");
