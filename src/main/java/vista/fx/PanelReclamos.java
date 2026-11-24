@@ -9,7 +9,7 @@ import modelo.comunidad.Lote;
 import modelo.personas.*;
 import modelo.reclamos.*;
 
-/** Reclamos: cada actor ve solo los que el controlador le permite consultar. */
+/** Pestaña de reclamos. Cada usuario ve solo los reclamos que puede consultar. */
 final class PanelReclamos extends PanelBase {
     private final TableView<Reclamo> tabla = Componentes.tabla();
 
@@ -31,7 +31,7 @@ final class PanelReclamos extends PanelBase {
         if (controlador.esAdministrador(actor))
             barra.getChildren().add(Componentes.boton("Asignar responsable", this::asignar));
         if (actor instanceof Personal)
-            barra.getChildren().add(Componentes.boton("Avanzar estado", this::avanzar));
+            barra.getChildren().add(Componentes.boton("Actualizar estado", this::actualizarEstado));
         else
             barra.getChildren().add(Componentes.boton("Reabrir", this::reabrir));
         setTop(barra);
@@ -48,12 +48,11 @@ final class PanelReclamos extends PanelBase {
         Reclamo elegido = Componentes.seleccionado(tabla, "un reclamo");
         Reclamo reclamo = controlador.consultarReclamo(actor, elegido.getNumero());
         String texto = reclamo + "\nPrioridad: " + reclamo.getPrioridad()
-                + "\nPresentó: " + reclamo.getPersonaPresentante()
                 + "\nResponsable: " + reclamo.getResponsableAsignado() + "\n\nHISTORIAL\n";
         for (CambioEstado cambio : reclamo.getCambiosEstado()) texto += cambio + "\n";
         texto += "\nCOMENTARIOS\n";
         for (Comentario comentario : reclamo.getComentarios()) texto += comentario + "\n";
-        Componentes.texto("Reclamo #" + reclamo.getNumero(), texto);
+        Componentes.texto("Reclamo " + reclamo.getNumero(), texto);
     }
 
     private void registrar() {
@@ -68,7 +67,7 @@ final class PanelReclamos extends PanelBase {
 
     private void asignar() {
         Reclamo reclamo = Componentes.seleccionado(tabla, "un reclamo");
-        Formulario f = new Formulario("Asignar reclamo #" + reclamo.getNumero());
+        Formulario f = new Formulario("Asignar reclamo " + reclamo.getNumero());
         ComboBox<Personal> responsable = f.opciones("Responsable",
                 controlador.listarResponsablesHabilitados(actor, reclamo.getTipo()));
         if (!f.mostrar()) return;
@@ -76,20 +75,19 @@ final class PanelReclamos extends PanelBase {
                 Formulario.elegido(responsable, "un responsable").getLegajo(), Fechas.ahora()));
     }
 
-    private void avanzar() {
+    private void actualizarEstado() {
         Reclamo reclamo = Componentes.seleccionado(tabla, "un reclamo");
-        EstadoReclamo actual = reclamo.getEstado();
-        if (actual == EstadoReclamo.CERRADO) throw new IllegalArgumentException("El reclamo ya está cerrado.");
-        EstadoReclamo siguiente = EstadoReclamo.values()[actual.ordinal() + 1];
-        Formulario f = new Formulario("Reclamo #" + reclamo.getNumero() + ": " + actual + " → " + siguiente);
+        Formulario f = new Formulario("Actualizar estado del reclamo " + reclamo.getNumero());
+        ComboBox<EstadoReclamo> estado = f.opciones("Nuevo estado", Arrays.asList(EstadoReclamo.values()));
         TextArea observacion = f.area("Observación");
         if (!f.mostrar()) return;
-        operar(() -> controlador.actualizarEstado(actor, reclamo.getNumero(), siguiente, Fechas.ahora(), observacion.getText()));
+        operar(() -> controlador.actualizarEstado(actor, reclamo.getNumero(), Formulario.elegido(estado, "un estado"),
+                Fechas.ahora(), observacion.getText()));
     }
 
     private void reabrir() {
         Reclamo reclamo = Componentes.seleccionado(tabla, "un reclamo");
-        Formulario f = new Formulario("Reabrir reclamo #" + reclamo.getNumero());
+        Formulario f = new Formulario("Reabrir reclamo " + reclamo.getNumero());
         TextArea motivo = f.area("Motivo");
         if (!f.mostrar()) return;
         operar(() -> controlador.reabrirReclamo(actor, reclamo.getNumero(), Fechas.ahora(), motivo.getText()));
@@ -97,7 +95,7 @@ final class PanelReclamos extends PanelBase {
 
     private void comentar() {
         Reclamo reclamo = Componentes.seleccionado(tabla, "un reclamo");
-        Formulario f = new Formulario("Comentar reclamo #" + reclamo.getNumero());
+        Formulario f = new Formulario("Comentar reclamo " + reclamo.getNumero());
         TextArea texto = f.area("Comentario");
         if (!f.mostrar()) return;
         operar(() -> controlador.agregarComentario(actor, reclamo.getNumero(), Fechas.ahora(), texto.getText()));

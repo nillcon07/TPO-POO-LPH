@@ -14,7 +14,6 @@ final class Formulario {
 
     Formulario(String titulo) {
         dialogo.setTitle(titulo);
-        dialogo.setHeaderText(titulo);
         dialogo.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         grilla.setHgap(10);
         grilla.setVgap(8);

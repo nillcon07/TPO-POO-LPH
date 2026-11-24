@@ -21,8 +21,8 @@
 ### 3. [Pasos para ejecutar el programa.]
     El sistema cuenta con una interfaz de consola interactiva principal y clases de prueba configuradas:
     
-    - Ejecución de la Interfaz por Terminal (`VistaConsola` / `Prueba`):
-      1. Navegar dentro del proyecto hacia la clase principal de ejecución (por ejemplo, `Prueba.java` o la clase que inicializa `GestorBarrioControlador` y `VistaConsola`).
+    - Ejecución de la Interfaz por Terminal (`VistaConsola`):
+      1. Navegar dentro del proyecto hacia la clase principal de ejecución (`principal.Main`).
       2. Ejecutar el método `main` desde el IDE.
       3. El sistema iniciará en la terminal solicitando la fecha y hora de la sesión (en formato `aaaa-MM-dd HH:mm`) para inicializar el reloj del sistema de simulación.
       4. Utilizar las opciones numéricas del menú principal para interactuar con los diferentes módulos como Administrador, Guardia o Empleado.

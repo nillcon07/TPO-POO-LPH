@@ -10,7 +10,7 @@ import modelo.comunidad.Lote;
 import modelo.finanzas.*;
 import modelo.personas.Persona;
 
-/** Expensas: el titular consulta sus lotes; el administrador consulta todos, emite y registra pagos. */
+/** Pestaña de expensas: consulta de cuenta (titular y administrador), emisión, pagos y ajustes (administrador). */
 final class PanelExpensas extends PanelBase {
     private final ComboBox<Lote> lote = new ComboBox<>();
     private final TextField fecha = new TextField();
@@ -20,14 +20,15 @@ final class PanelExpensas extends PanelBase {
         super(controlador, actor);
         fecha.setPrefColumnCount(10);
         resultado.setEditable(false);
-        HBox consulta = new HBox(8, new Label("Lote:"), lote, new Label("Fecha:"), fecha,
-                Componentes.boton("Consultar cuenta", this::consultar));
         HBox barra = Componentes.barra();
+        barra.getChildren().addAll(new Label("Lote:"), lote, new Label("Fecha:"), fecha,
+                Componentes.boton("Consultar cuenta", this::consultar));
         if (controlador.esAdministrador(actor)) {
-            barra.getChildren().addAll(Componentes.boton("Emitir expensas", this::emitir),
-                    Componentes.boton("Registrar pago", this::registrarPago));
+            barra.getChildren().addAll(new Separator(javafx.geometry.Orientation.VERTICAL),
+                    Componentes.boton("Emitir expensas", this::emitir),
+                    Componentes.boton("Registrar pago", this::registrarPago),
+                    Componentes.boton("Corregir pago", this::ajustarPago));
         }
-        barra.getChildren().add(0, consulta);
         setTop(barra);
         setCenter(resultado);
         refrescar();
@@ -41,19 +42,23 @@ final class PanelExpensas extends PanelBase {
         if (anterior != null && lote.getItems().contains(anterior)) lote.setValue(anterior);
         else if (!lote.getItems().isEmpty()) lote.getSelectionModel().selectFirst();
         if (fecha.getText().isBlank()) fecha.setText(Fechas.hoy());
-        if (lote.getValue() != null) consultar();
     }
 
     private void consultar() {
         int numero = Formulario.elegido(lote, "un lote").getNumero();
         String dia = fecha.getText().trim();
         EstadoCuenta cuenta = controlador.consultarCuenta(actor, numero, dia);
-        String texto = "ESTADO DE CUENTA — lote " + numero + " al " + dia + "\n" + cuenta + "\n\nPAGOS\n";
+        String texto = cuenta + "\n\nPAGOS ORIGINALES\n";
         for (Pago pago : controlador.consultarPagos(actor, numero, dia)) texto += pago + "\n";
         texto += "\nAJUSTES\n";
         for (AsientoAjuste ajuste : controlador.consultarAjustes(actor, numero, dia)) {
             texto += ajuste.getFecha() + " | pago " + ajuste.getPagoCorregido().getNumero()
                     + " | $" + ajuste.getMontoAjuste() + " | " + ajuste.getMotivo() + "\n";
+        }
+        texto += "\nIMPUTACIONES EFECTIVAS\n";
+        for (ImputacionPago imputacion : cuenta.getImputacionesEfectivas()) {
+            texto += "Pago " + imputacion.getPago().getNumero() + " | período " + imputacion.getExpensa().getPeriodo()
+                    + " | intereses $" + imputacion.getMontoInteres() + " | capital $" + imputacion.getMontoCapital() + "\n";
         }
         resultado.setText(texto);
     }
@@ -73,12 +78,24 @@ final class PanelExpensas extends PanelBase {
     private void registrarPago() {
         Formulario f = new Formulario("Registrar pago");
         ComboBox<Lote> elegido = f.opciones("Lote", controlador.listarLotes(actor));
-        TextField dia = f.texto("Fecha", Fechas.hoy());
+        TextField dia = f.texto("Fecha del pago", Fechas.hoy());
         TextField importe = f.texto("Importe", "");
         ComboBox<MedioPago> medio = f.opciones("Medio de pago", Arrays.asList(MedioPago.values()));
         if (!f.mostrar()) return;
         operar(() -> Componentes.info(String.valueOf(controlador.registrarPago(actor,
                 Formulario.elegido(elegido, "un lote").getNumero(), dia.getText(),
                 Componentes.decimal(importe.getText(), "Importe"), Formulario.elegido(medio, "un medio de pago")))));
+    }
+
+    private void ajustarPago() {
+        int numero = Formulario.elegido(lote, "un lote").getNumero();
+        Formulario f = new Formulario("Corregir pago - Lote " + numero);
+        ComboBox<Pago> pago = f.opciones("Pago a corregir", controlador.consultarPagos(actor, numero, Fechas.hoy()));
+        TextField dia = f.texto("Fecha del ajuste", Fechas.hoy());
+        TextField monto = f.texto("Importe del ajuste (con signo)", "");
+        TextField motivo = f.texto("Motivo", "");
+        if (!f.mostrar()) return;
+        operar(() -> controlador.ajustarPago(actor, numero, Formulario.elegido(pago, "un pago").getNumero(),
+                dia.getText(), Componentes.decimal(monto.getText(), "Importe del ajuste"), motivo.getText()));
     }
 }

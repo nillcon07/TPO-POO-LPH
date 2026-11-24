@@ -24,14 +24,18 @@ final class Componentes {
         TableColumn<T, String> columna = new TableColumn<>(titulo);
         columna.setCellValueFactory(celda -> {
             Object dato = valor.apply(celda.getValue());
-            return new SimpleStringProperty(dato == null ? "—" : String.valueOf(dato));
+            return new SimpleStringProperty(dato == null ? "" : String.valueOf(dato));
         });
         tabla.getColumns().add(columna);
     }
 
-    /** Recarga la tabla: se reemplazan todos los elementos de una vez. */
+    /**
+     * Recarga la tabla. refresh() es necesario porque las filas son los mismos objetos del modelo
+     * (no observables): sin él, JavaFX no vuelve a dibujar las celdas que cambiaron por dentro.
+     */
     static <T> void cargar(TableView<T> tabla, List<T> elementos) {
         tabla.setItems(FXCollections.observableArrayList(elementos));
+        tabla.refresh();
     }
 
     /** Devuelve la fila seleccionada o lanza un error legible si no hay selección. */
@@ -64,12 +68,14 @@ final class Componentes {
 
     static void error(String mensaje) {
         Alert alerta = new Alert(Alert.AlertType.ERROR, mensaje, ButtonType.OK);
-        alerta.setHeaderText("No se pudo completar la operación");
+        alerta.setTitle("Error");
+        alerta.setHeaderText(null);
         alerta.showAndWait();
     }
 
     static void info(String mensaje) {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION, mensaje, ButtonType.OK);
+        alerta.setTitle("Los Aromos");
         alerta.setHeaderText(null);
         alerta.showAndWait();
     }
@@ -77,11 +83,9 @@ final class Componentes {
     static void texto(String titulo, String contenido) {
         TextArea area = new TextArea(contenido);
         area.setEditable(false);
-        area.setWrapText(true);
-        area.setPrefSize(640, 420);
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        area.setPrefSize(600, 400);
+        Alert alerta = new Alert(Alert.AlertType.NONE, "", ButtonType.CLOSE);
         alerta.setTitle(titulo);
-        alerta.setHeaderText(titulo);
         alerta.getDialogPane().setContent(area);
         alerta.setResizable(true);
         alerta.showAndWait();

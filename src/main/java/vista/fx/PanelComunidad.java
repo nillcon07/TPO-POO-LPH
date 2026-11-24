@@ -8,7 +8,7 @@ import modelo.comun.Fechas;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
 
-/** Comunidad y personal: solo se muestra al administrador (y el controlador lo vuelve a exigir). */
+/** Pestaña de comunidad y personal (solo administrador). */
 final class PanelComunidad extends PanelBase {
     private final TableView<Lote> lotes = Componentes.tabla();
     private final TableView<Personal> personal = Componentes.tabla();
@@ -21,11 +21,12 @@ final class PanelComunidad extends PanelBase {
         Componentes.columna(lotes, "Residentes", Lote::getResidentes);
         Componentes.columna(lotes, "Autorizados a reclamar", Lote::getPersonasAutorizadasReclamo);
         Componentes.columna(personal, "Legajo", Personal::getLegajo);
-        Componentes.columna(personal, "Rol", p -> p.getClass().getSimpleName());
+        Componentes.columna(personal, "Rol", p -> VentanaPrincipal.rol(controlador, p));
         Componentes.columna(personal, "Persona", p -> p);
         Componentes.columna(personal, "Ingreso", Personal::getFechaIngreso);
 
         setTop(Componentes.barra(
+                Componentes.boton("Personas registradas", this::verPersonas),
                 Componentes.boton("Registrar persona", this::registrarPersona),
                 Componentes.boton("Agregar lote", this::agregarLote),
                 Componentes.boton("Agregar residente", this::agregarResidente),
@@ -42,6 +43,12 @@ final class PanelComunidad extends PanelBase {
     @Override void refrescar() {
         Componentes.cargar(lotes, controlador.listarLotes(actor));
         Componentes.cargar(personal, controlador.listarPersonal(actor));
+    }
+
+    private void verPersonas() {
+        String texto = "";
+        for (Persona persona : controlador.listarPersonas()) texto += persona + "\n";
+        Componentes.texto("Personas registradas", texto);
     }
 
     private void registrarPersona() {

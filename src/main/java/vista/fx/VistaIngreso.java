@@ -4,17 +4,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import controlador.GestorBarrioControlador;
 import modelo.comun.Fechas;
 import modelo.personas.Persona;
 
-/** Pantalla inicial: se elige el actor de la sesión y la fecha y hora simulada. */
+/** Pantalla inicial: se elige el usuario y la fecha y hora de la sesión. */
 final class VistaIngreso {
     private final AplicacionFX aplicacion;
     private final GestorBarrioControlador controlador;
@@ -28,22 +26,14 @@ final class VistaIngreso {
         ComboBox<Persona> actor = new ComboBox<>(FXCollections.observableArrayList(controlador.listarActores()));
         actor.setConverter(new StringConverter<>() {
             @Override public String toString(Persona persona) {
-                return persona == null ? "" : persona + " — " + VentanaPrincipal.rol(controlador, persona);
+                return persona == null ? "" : persona + " - " + VentanaPrincipal.rol(controlador, persona);
             }
             @Override public Persona fromString(String texto) { return null; }
         });
-        actor.setMaxWidth(Double.MAX_VALUE);
+        actor.setPrefWidth(400);
         actor.getSelectionModel().selectFirst();
 
         TextField fecha = new TextField(fechaInicial());
-
-        GridPane grilla = new GridPane();
-        grilla.setHgap(10);
-        grilla.setVgap(10);
-        grilla.add(new Label("Usuario:"), 0, 0);
-        grilla.add(actor, 1, 0);
-        grilla.add(new Label("Fecha y hora (aaaa-MM-dd HH:mm):"), 0, 1);
-        grilla.add(fecha, 1, 1);
 
         Button ingresar = Componentes.boton("Ingresar", () -> {
             Persona elegido = Formulario.elegido(actor, "un usuario");
@@ -53,15 +43,20 @@ final class VistaIngreso {
         });
         ingresar.setDefaultButton(true);
 
-        Label titulo = new Label("Barrio " + controlador.getNombreBarrio());
-        titulo.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
-        VBox raiz = new VBox(16, titulo, new Label("Seleccione con qué usuario trabajar."), grilla, ingresar);
-        raiz.setAlignment(Pos.CENTER);
-        raiz.setPadding(new Insets(30));
-        return new Scene(raiz, 620, 320);
+        GridPane grilla = new GridPane();
+        grilla.setHgap(10);
+        grilla.setVgap(10);
+        grilla.setPadding(new Insets(20));
+        grilla.add(new Label("Usuario:"), 0, 0);
+        grilla.add(actor, 1, 0);
+        grilla.add(new Label("Fecha y hora:"), 0, 1);
+        grilla.add(fecha, 1, 1);
+        grilla.add(new Label("(aaaa-MM-dd HH:mm)"), 1, 2);
+        grilla.add(ingresar, 1, 3);
+        return new Scene(grilla);
     }
 
-    /** Si ya hay una sesión se conserva su fecha (no se permite retroceder); si no, se propone la del sistema. */
+    // Si ya había una sesión abierta se conserva su fecha; si no, se propone la del sistema.
     private static String fechaInicial() {
         try {
             return Fechas.ahora();

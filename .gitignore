@@ -3,3 +3,7 @@ out/
 datos/*.dat
 datos/*.tmp
 lib/*.jar
+
+# Configuración local de IntelliJ
+.idea/
+*.iml
