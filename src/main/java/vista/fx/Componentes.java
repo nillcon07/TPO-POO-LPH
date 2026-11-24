@@ -29,9 +29,13 @@ final class Componentes {
         tabla.getColumns().add(columna);
     }
 
-    /** Recarga la tabla: se reemplazan todos los elementos de una vez. */
+    /**
+     * Recarga la tabla. refresh() es necesario porque las filas son los mismos objetos del modelo
+     * (no observables): sin él, JavaFX no vuelve a dibujar las celdas que cambiaron por dentro.
+     */
     static <T> void cargar(TableView<T> tabla, List<T> elementos) {
         tabla.setItems(FXCollections.observableArrayList(elementos));
+        tabla.refresh();
     }
 
     /** Devuelve la fila seleccionada o lanza un error legible si no hay selección. */

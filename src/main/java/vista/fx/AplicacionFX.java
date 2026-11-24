@@ -5,7 +5,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import controlador.GestorBarrioControlador;
 import modelo.personas.Persona;
-import principal.Arranque;
+import principal.Main;
 
 /** Vista gráfica del sistema. Usa el mismo controlador que la versión de consola. */
 public class AplicacionFX extends Application {
@@ -16,7 +16,7 @@ public class AplicacionFX extends Application {
     public void start(Stage ventana) {
         this.ventana = ventana;
         try {
-            controlador = Arranque.crearControlador(Arranque.RUTA_DATOS);
+            controlador = Main.crearControlador(Main.RUTA_DATOS);
         } catch (RuntimeException e) {
             Componentes.error("No se pudo iniciar Los Aromos: " + e.getMessage());
             Platform.exit();
