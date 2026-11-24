@@ -4,9 +4,9 @@
 - Benjamin Sitzerman — 1208780
 - Marcos Lopez Quevedo — 1207164
 
-## Descripción y Objetivo del proyecto (A desarrollar)
+## Descripción y Objetivo del proyecto
 
-## Instrucciones de ejecución (A desarrollar)
+## Instrucciones de ejecución 
 
 ### 1. [Requisitos previos para ejecutar el proyecto.]
     - Java Development Kit (JDK) versión 17 o superior.
