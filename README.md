@@ -29,17 +29,17 @@ Cada usuario solo puede realizar las operaciones que corresponden a su rol. Los 
 
 ## Instrucciones de ejecución 
 
-### 1. [Requisitos previos para ejecutar el proyecto.]
+### 1. Requisitos previos para ejecutar el proyecto
     - Java Development Kit (JDK) versión 25 o superior (lo requiere el `pom.xml`).
     - Entorno de desarrollo integrado (IDE) compatible con proyectos Maven, como IntelliJ IDEA (recomendado).
 
-### 2. [Pasos para configurar el entorno.]
+### 2. Pasos para configurar el entorno
     1. Clonar o descargar el repositorio del proyecto en tu máquina local.
     2. Abrir el IDE (IntelliJ IDEA) y seleccionar "Open", buscando la carpeta raíz del proyecto (`TPO-POO-LPh` o equivalente) que contiene el archivo `pom.xml`.
     3. Esperar a que Maven importe y resuelva las dependencias automáticamente de forma correcta.
     4. Verificar que `src/main/java` esté marcada como carpeta de fuentes (en azul) y que el SDK del proyecto sea JDK 25 o superior.
 
-### 3. [Pasos para ejecutar el programa.]
+### 3. Pasos para ejecutar el programa
     El sistema cuenta con dos interfaces independientes (terminal y gráfica) y pruebas de aceptación:
     
     - Ejecución de la Interfaz por Terminal (`VistaConsola`):
