@@ -1,4 +1,4 @@
-package vista.fx;
+package vista.javafx;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,4 +1,4 @@
-package vista.fx;
+package vista.javafx;
 
 import javafx.scene.control.*;
 import controlador.GestorBarrioControlador;

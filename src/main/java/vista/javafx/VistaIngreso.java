@@ -1,4 +1,4 @@
-package vista.fx;
+package vista.javafx;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
