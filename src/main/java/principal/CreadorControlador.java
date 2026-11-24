@@ -9,10 +9,10 @@ import modelo.repositorios.RepositorioBarrio;
 import modelo.repositorios.RepositorioPersonas;
 import modelo.repositorios.RepositorioReclamosMemoria;
 
-public final class Arranque {
+public final class CreadorControlador {
     public static final String RUTA_DATOS = "datos/barrio.dat";
 
-    private Arranque() { }
+    private CreadorControlador() { }
 
     public static GestorBarrioControlador crearControlador(String rutaDatos) {
         RepositorioPersonas personas = new RepositorioPersonasCsv(Paths.get("datos", "personas.csv"));

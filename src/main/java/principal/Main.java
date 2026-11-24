@@ -7,7 +7,7 @@ import vista.VistaConsola;
 public class Main {
     public static void main(String[] args) {
         try {
-            String ruta = Arranque.RUTA_DATOS;
+            String ruta = CreadorControlador.RUTA_DATOS;
             boolean resumen = false;
             String fechaHora = null;
             for (String argumento : args) {
@@ -16,7 +16,7 @@ public class Main {
                 else if (argumento.startsWith("--fecha=")) fechaHora = argumento.substring(8);
                 else throw new IllegalArgumentException("Argumento no reconocido: " + argumento);
             }
-            GestorBarrioControlador controlador = Arranque.crearControlador(ruta);
+            GestorBarrioControlador controlador = CreadorControlador.crearControlador(ruta);
             if (resumen) {
                 if (fechaHora == null) throw new IllegalArgumentException("Para obtener el resumen indique --fecha=aaaa-MM-dd HH:mm.");
                 Fechas.establecerMomento(fechaHora);
