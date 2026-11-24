@@ -675,6 +675,7 @@ public final class VistaConsola {
     }
 
     private void listarEquipos() {
+        controlador.verificarAdministrador(actor);
         System.out.println("EQUIPOS"); listar(controlador.listarEquipos());
         System.out.println("FALLAS"); listar(controlador.listarFallas(actor));
         System.out.println("ÓRDENES");
@@ -787,13 +788,13 @@ public final class VistaConsola {
 
 
     private void listarAccesos() {
+        controlador.verificarAdministrador(actor);
+
         System.out.println("AUTORIZACIONES");
         listar(controlador.listarAutorizaciones(actor));
 
-        if (controlador.esAdministrador(actor) || controlador.esGuardiaPorteria(actor)) {
-            System.out.println("INGRESOS Y EGRESOS");
-            listar(controlador.listarAccesos(actor));
-        }
+        System.out.println("INGRESOS Y EGRESOS");
+        listar(controlador.listarAccesos(actor));
     }
 
 
