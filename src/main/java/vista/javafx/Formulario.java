@@ -1,4 +1,4 @@
-package vista.fx;
+package vista.javafx;
 
 import java.util.List;
 import javafx.collections.FXCollections;
