@@ -33,12 +33,15 @@ final class VistaIngreso {
         actor.setPrefWidth(400);
         actor.getSelectionModel().selectFirst();
 
+        RelojSesion reloj = RelojSesion.getInstancia();
+        boolean sesionIniciada = reloj.tieneMomento();
         TextField fecha = new TextField(fechaInicial());
+        fecha.setDisable(sesionIniciada);
 
         Button ingresar = Componentes.boton("Ingresar", () -> {
             Persona elegido = Formulario.elegido(actor, "un usuario");
-            RelojSesion.getInstancia().establecer(fecha.getText().trim());
-            controlador.verificarControles(RelojSesion.getInstancia().ahora());
+            if (!sesionIniciada) reloj.establecer(fecha.getText().trim());
+            controlador.verificarControles(reloj.ahora());
             aplicacion.mostrarPrincipal(elegido);
         });
         ingresar.setDefaultButton(true);
@@ -51,17 +54,17 @@ final class VistaIngreso {
         grilla.add(actor, 1, 0);
         grilla.add(new Label("Fecha y hora:"), 0, 1);
         grilla.add(fecha, 1, 1);
-        grilla.add(new Label("(aaaa-MM-dd HH:mm)"), 1, 2);
+        grilla.add(new Label(sesionIniciada
+                ? "(se cambia desde Sesión > Cambiar fecha y hora)"
+                : "(aaaa-MM-dd HH:mm)"), 1, 2);
         grilla.add(ingresar, 1, 3);
         return new Scene(grilla);
     }
 
     // Si ya había una sesión abierta se conserva su fecha; si no, se propone la del sistema.
     private static String fechaInicial() {
-        try {
-            return RelojSesion.getInstancia().ahora();
-        } catch (IllegalArgumentException e) {
-            return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-        }
+        RelojSesion reloj = RelojSesion.getInstancia();
+        if (reloj.tieneMomento()) return reloj.ahora();
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 }

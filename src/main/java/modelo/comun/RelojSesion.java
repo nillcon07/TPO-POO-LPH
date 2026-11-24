@@ -21,6 +21,10 @@ public final class RelojSesion {
         establecer(fechaHora);
     }
 
+    public boolean tieneMomento() {
+        return momentoActual != null;
+    }
+
     public String ahora() {
         Validaciones.exigir(momentoActual != null, "Primero indique la fecha y hora de la sesión.");
         return momentoActual;
