@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.personas.*;
 
 /** Ventana de trabajo: muestra solo las pestañas que corresponden al rol del usuario. */
@@ -90,21 +90,20 @@ final class VentanaPrincipal {
 
     private void cambiarFecha() {
         Formulario f = new Formulario("Fecha y hora de la sesión");
-        TextField nueva = f.texto("Fecha y hora (aaaa-MM-dd HH:mm)", Fechas.ahora());
+        TextField nueva = f.texto("Fecha y hora (aaaa-MM-dd HH:mm)", RelojSesion.getInstancia().ahora());
         if (!f.mostrar()) return;
         String valor = nueva.getText().trim();
-        Fechas.noAnterior(Fechas.ahora(), valor);
-        Fechas.establecerMomento(valor);
+        RelojSesion.getInstancia().avanzar(valor);
         verificarControles();
     }
 
     private void verificarControles() {
-        controlador.verificarControles(Fechas.ahora());
+        controlador.verificarControles(RelojSesion.getInstancia().ahora());
         actualizarEstado();
         for (PanelBase panel : paneles) panel.refrescar();
     }
 
     private void actualizarEstado() {
-        estado.setText("Usuario: " + actor + " (" + rol(controlador, actor) + ")     Fecha: " + Fechas.ahora());
+        estado.setText("Usuario: " + actor + " (" + rol(controlador, actor) + ")     Fecha: " + RelojSesion.getInstancia().ahora());
     }
 }

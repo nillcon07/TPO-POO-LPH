@@ -419,7 +419,7 @@ public class GestorBarrioControlador {
 
     public List<Expensa> emitirExpensas(Persona actor, String periodo, double presupuesto) {
         admin(actor);
-        return confirmar(liquidador.emitir(barrio.getLotes(), periodo, presupuesto, Fechas.hoy()));
+        return confirmar(liquidador.emitir(barrio.getLotes(), periodo, presupuesto, RelojSesion.getInstancia().hoy()));
     }
 
     public EstadoCuenta consultarCuenta(Persona actor, int numeroLote, String fecha) {
@@ -450,14 +450,14 @@ public class GestorBarrioControlador {
     public Pago registrarPago(Persona actor, int lote, String fecha, double importe, MedioPago medio) {
         admin(actor);
         Pago pago = barrio.buscarLote(lote).getCuenta().registrarPago(fecha, importe, medio);
-        barrio.verificarControles(Fechas.ahora());
+        barrio.verificarControles(RelojSesion.getInstancia().ahora());
         return confirmar(pago);
     }
 
     public AsientoAjuste ajustarPago(Persona actor, int lote, int pago, String fecha, double monto, String motivo) {
         admin(actor);
         AsientoAjuste ajuste = barrio.buscarLote(lote).getCuenta().ajustar(pago, fecha, monto, motivo);
-        barrio.verificarControles(Fechas.ahora());
+        barrio.verificarControles(RelojSesion.getInstancia().ahora());
         return confirmar(ajuste);
     }
 
@@ -538,7 +538,7 @@ public class GestorBarrioControlador {
 
     public String generarReportes(Persona actor, String fecha) {
         admin(actor);
-        verificarControles(Fechas.ahora());
+        verificarControles(RelojSesion.getInstancia().ahora());
 
         String texto = "RECLAMOS PENDIENTES\n";
         for (Reclamo reclamo : reportes.reclamosPendientes(barrio)) texto += reclamo + "\n";

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
 import modelo.reclamos.*;
@@ -62,7 +62,7 @@ final class PanelReclamos extends PanelBase {
         TextArea descripcion = f.area("Descripción");
         if (!f.mostrar()) return;
         operar(() -> controlador.registrarReclamo(actor, Formulario.elegido(lote, "un lote").getNumero(),
-                Formulario.elegido(tipo, "un tipo"), descripcion.getText(), Fechas.ahora()));
+                Formulario.elegido(tipo, "un tipo"), descripcion.getText(), RelojSesion.getInstancia().ahora()));
     }
 
     private void asignar() {
@@ -72,7 +72,7 @@ final class PanelReclamos extends PanelBase {
                 controlador.listarResponsablesHabilitados(actor, reclamo.getTipo()));
         if (!f.mostrar()) return;
         operar(() -> controlador.asignarReclamo(actor, reclamo.getNumero(),
-                Formulario.elegido(responsable, "un responsable").getLegajo(), Fechas.ahora()));
+                Formulario.elegido(responsable, "un responsable").getLegajo(), RelojSesion.getInstancia().ahora()));
     }
 
     private void actualizarEstado() {
@@ -82,7 +82,7 @@ final class PanelReclamos extends PanelBase {
         TextArea observacion = f.area("Observación");
         if (!f.mostrar()) return;
         operar(() -> controlador.actualizarEstado(actor, reclamo.getNumero(), Formulario.elegido(estado, "un estado"),
-                Fechas.ahora(), observacion.getText()));
+                RelojSesion.getInstancia().ahora(), observacion.getText()));
     }
 
     private void reabrir() {
@@ -90,7 +90,7 @@ final class PanelReclamos extends PanelBase {
         Formulario f = new Formulario("Reabrir reclamo " + reclamo.getNumero());
         TextArea motivo = f.area("Motivo");
         if (!f.mostrar()) return;
-        operar(() -> controlador.reabrirReclamo(actor, reclamo.getNumero(), Fechas.ahora(), motivo.getText()));
+        operar(() -> controlador.reabrirReclamo(actor, reclamo.getNumero(), RelojSesion.getInstancia().ahora(), motivo.getText()));
     }
 
     private void comentar() {
@@ -98,6 +98,6 @@ final class PanelReclamos extends PanelBase {
         Formulario f = new Formulario("Comentar reclamo " + reclamo.getNumero());
         TextArea texto = f.area("Comentario");
         if (!f.mostrar()) return;
-        operar(() -> controlador.agregarComentario(actor, reclamo.getNumero(), Fechas.ahora(), texto.getText()));
+        operar(() -> controlador.agregarComentario(actor, reclamo.getNumero(), RelojSesion.getInstancia().ahora(), texto.getText()));
     }
 }

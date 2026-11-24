@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.comunidad.Lote;
 import modelo.finanzas.*;
 import modelo.personas.Persona;
@@ -41,7 +41,7 @@ final class PanelExpensas extends PanelBase {
         lote.setItems(FXCollections.observableArrayList(controlador.listarLotesConsultables(actor)));
         if (anterior != null && lote.getItems().contains(anterior)) lote.setValue(anterior);
         else if (!lote.getItems().isEmpty()) lote.getSelectionModel().selectFirst();
-        if (fecha.getText().isBlank()) fecha.setText(Fechas.hoy());
+        if (fecha.getText().isBlank()) fecha.setText(RelojSesion.getInstancia().hoy());
     }
 
     private void consultar() {
@@ -65,7 +65,7 @@ final class PanelExpensas extends PanelBase {
 
     private void emitir() {
         Formulario f = new Formulario("Emitir expensas");
-        TextField periodo = f.texto("Período (aaaa-MM)", Fechas.hoy().substring(0, 7));
+        TextField periodo = f.texto("Período (aaaa-MM)", RelojSesion.getInstancia().hoy().substring(0, 7));
         TextField presupuesto = f.texto("Presupuesto mensual", "");
         if (!f.mostrar()) return;
         operar(() -> {
@@ -78,7 +78,7 @@ final class PanelExpensas extends PanelBase {
     private void registrarPago() {
         Formulario f = new Formulario("Registrar pago");
         ComboBox<Lote> elegido = f.opciones("Lote", controlador.listarLotes(actor));
-        TextField dia = f.texto("Fecha del pago", Fechas.hoy());
+        TextField dia = f.texto("Fecha del pago", RelojSesion.getInstancia().hoy());
         TextField importe = f.texto("Importe", "");
         ComboBox<MedioPago> medio = f.opciones("Medio de pago", Arrays.asList(MedioPago.values()));
         if (!f.mostrar()) return;
@@ -90,8 +90,8 @@ final class PanelExpensas extends PanelBase {
     private void ajustarPago() {
         int numero = Formulario.elegido(lote, "un lote").getNumero();
         Formulario f = new Formulario("Corregir pago - Lote " + numero);
-        ComboBox<Pago> pago = f.opciones("Pago a corregir", controlador.consultarPagos(actor, numero, Fechas.hoy()));
-        TextField dia = f.texto("Fecha del ajuste", Fechas.hoy());
+        ComboBox<Pago> pago = f.opciones("Pago a corregir", controlador.consultarPagos(actor, numero, RelojSesion.getInstancia().hoy()));
+        TextField dia = f.texto("Fecha del ajuste", RelojSesion.getInstancia().hoy());
         TextField monto = f.texto("Importe del ajuste (con signo)", "");
         TextField motivo = f.texto("Motivo", "");
         if (!f.mostrar()) return;

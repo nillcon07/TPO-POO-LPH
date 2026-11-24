@@ -4,7 +4,7 @@ import java.util.Arrays;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
 
@@ -106,7 +106,7 @@ final class PanelComunidad extends PanelBase {
         Formulario f = new Formulario("Registrar guardia");
         ComboBox<Persona> persona = f.opciones("Persona", controlador.listarPersonas());
         TextField legajo = f.texto("Legajo", "");
-        TextField fecha = f.texto("Fecha de ingreso", Fechas.hoy());
+        TextField fecha = f.texto("Fecha de ingreso", RelojSesion.getInstancia().hoy());
         ComboBox<Turno> turno = f.opciones("Turno", Arrays.asList(Turno.values()));
         ComboBox<PuestoGuardia> puesto = f.opciones("Puesto", Arrays.asList(PuestoGuardia.values()));
         if (!f.mostrar()) return;
@@ -119,7 +119,7 @@ final class PanelComunidad extends PanelBase {
         Formulario f = new Formulario("Registrar técnico de mantenimiento");
         ComboBox<Persona> persona = f.opciones("Persona", controlador.listarPersonas());
         TextField legajo = f.texto("Legajo", "");
-        TextField fecha = f.texto("Fecha de ingreso", Fechas.hoy());
+        TextField fecha = f.texto("Fecha de ingreso", RelojSesion.getInstancia().hoy());
         ComboBox<Especialidad> especialidad = f.opciones("Especialidad", Arrays.asList(Especialidad.values()));
         if (!f.mostrar()) return;
         operar(() -> controlador.agregarEmpleado(actor, Formulario.elegido(persona, "una persona").getDocumento(),

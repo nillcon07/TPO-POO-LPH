@@ -42,7 +42,7 @@ public final class PruebasAceptacion {
         return archivo;
     }
     private static final class Contexto {
-        Contexto() { Fechas.establecerMomento("2026-11-03 10:00"); }
+        Contexto() { RelojSesion.getInstancia().establecer("2026-11-03 10:00"); }
         final RepositorioPersonas personas = new RepositorioPersonasMemoria(new RepositorioPersonasCsv(Paths.get("datos/personas.csv")).listar());
         final Barrio barrio = DatosDemo.crear(personas);
         final Administrador admin = barrio.getAdministrador();
@@ -522,6 +522,17 @@ public final class PruebasAceptacion {
             rechaza(() -> x.c.buscarAutorizaciones(ronda, "106", "2026-01-02 10:00"));
             rechaza(() -> x.c.listarLotesParaAutorizarVisitas(x.tecnico));
             exigir(x.c.esGuardiaPorteria(x.guardia) && !x.c.esGuardiaPorteria(ronda), "Rol de portería.");
+        });
+        probar("Singleton: el reloj de la sesión es único y no retrocede", () -> {
+            RelojSesion a = RelojSesion.getInstancia(), b = RelojSesion.getInstancia();
+            exigir(a == b, "Ambas referencias apuntan al mismo objeto.");
+            a.establecer("2026-11-03 10:00");
+            exigir(b.ahora().equals("2026-11-03 10:00") && b.hoy().equals("2026-11-03"), "El cambio se ve desde cualquier referencia.");
+            rechaza(() -> b.avanzar("2026-11-03 09:59"));
+            b.avanzar("2026-11-04 08:00");
+            exigir(a.ahora().equals("2026-11-04 08:00"), "Avanzar actualiza la única instancia.");
+            rechaza(() -> a.establecer("2026-13-01 10:00"));
+            exigir(a.ahora().equals("2026-11-04 08:00"), "Un valor inválido no modifica la hora.");
         });
         registrar("\nResultado: " + correctas + " escenarios correctos, " + fallidas + " fallidos, " + comprobaciones + " comprobaciones.");
         Files.writeString(Paths.get("target/pruebas-aceptacion.txt"), informe);

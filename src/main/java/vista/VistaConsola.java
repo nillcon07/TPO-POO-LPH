@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.comun.Validaciones;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
@@ -40,7 +40,7 @@ public final class VistaConsola {
 
             if (controlesAutomaticosHabilitados) {
                 try {
-                    controlador.verificarControles(Fechas.ahora());
+                    controlador.verificarControles(RelojSesion.getInstancia().ahora());
                 } catch (RuntimeException e) {
                     controlesAutomaticosHabilitados = false;
 
@@ -137,7 +137,7 @@ public final class VistaConsola {
                         System.out.println(
                                 controlador.generarReportes(
                                         actor,
-                                        Fechas.ahora()
+                                        RelojSesion.getInstancia().ahora()
                                 )
                         );
                         break;
@@ -154,7 +154,7 @@ public final class VistaConsola {
 
                     case 9:
                         controlador.verificarControles(
-                                Fechas.ahora()
+                                RelojSesion.getInstancia().ahora()
                         );
 
                         controlesAutomaticosHabilitados = true;
@@ -209,9 +209,8 @@ public final class VistaConsola {
             String valor = leer("Fecha y hora de la sesión (aaaa-MM-dd HH:mm): ");
             if (finEntrada) return;
             try {
-                if (comprobarAvance)
-                    Fechas.noAnterior(Fechas.ahora(), valor);
-                Fechas.establecerMomento(valor);
+                if (comprobarAvance) RelojSesion.getInstancia().avanzar(valor);
+                else RelojSesion.getInstancia().establecer(valor);
                 return;
             } catch (IllegalArgumentException e) {
                 System.out.println("ERROR: " + e.getMessage());
@@ -220,7 +219,7 @@ public final class VistaConsola {
     }
 
     private void completada() {
-        controlador.verificarControles(Fechas.ahora());
+        controlador.verificarControles(RelojSesion.getInstancia().ahora());
         System.out.println("Operación completada. Datos guardados.");
     }
 
@@ -449,7 +448,7 @@ public final class VistaConsola {
                 loteSeleccionado.getNumero(),
                 tipo,
                 descripcion,
-                Fechas.ahora()
+                RelojSesion.getInstancia().ahora()
         );
 
         System.out.println("Reclamo registrado: " + nuevo);
@@ -478,7 +477,7 @@ public final class VistaConsola {
                 actor,
                 reclamo.getNumero(),
                 responsable.getLegajo(),
-                Fechas.ahora()
+                RelojSesion.getInstancia().ahora()
         );
 
         completada();
@@ -513,7 +512,7 @@ public final class VistaConsola {
                 actor,
                 reclamo.getNumero(),
                 estado,
-                Fechas.ahora(),
+                RelojSesion.getInstancia().ahora(),
                 observacion
         );
 
@@ -541,7 +540,7 @@ public final class VistaConsola {
         controlador.reabrirReclamo(
                 actor,
                 reclamo.getNumero(),
-                Fechas.ahora(),
+                RelojSesion.getInstancia().ahora(),
                 observacion
         );
 
@@ -552,7 +551,7 @@ public final class VistaConsola {
     private void comentar() {
         Reclamo reclamo = reclamo(); if (reclamo == null) return;
         String texto = leer("Comentario: "); if (finEntrada) return;
-        controlador.agregarComentario(actor, reclamo.getNumero(), Fechas.ahora(), texto);
+        controlador.agregarComentario(actor, reclamo.getNumero(), RelojSesion.getInstancia().ahora(), texto);
         completada();
     }
 
@@ -578,7 +577,7 @@ public final class VistaConsola {
 
     private void emitirExpensas() {
         controlador.verificarAdministrador(actor);
-        String actual = Fechas.hoy().substring(0, 7);
+        String actual = RelojSesion.getInstancia().hoy().substring(0, 7);
         String periodo = leer("Período aaaa-MM [" + actual + "]: ", actual);
         double presupuesto = decimal("Presupuesto mensual: "); if (finEntrada) return;
         System.out.println("Expensas emitidas: " + controlador.emitirExpensas(actor, periodo, presupuesto).size());
@@ -641,7 +640,7 @@ public final class VistaConsola {
     private void ajustarPago() {
         controlador.verificarAdministrador(actor);
         int lote = lote(); if (lote == 0) return;
-        Pago pago = seleccionar("Pago a corregir", controlador.consultarPagos(actor, lote, Fechas.hoy()));
+        Pago pago = seleccionar("Pago a corregir", controlador.consultarPagos(actor, lote, RelojSesion.getInstancia().hoy()));
         if (pago == null) return;
         String fecha = fecha("Fecha del ajuste"); double monto = decimal("Importe del ajuste con signo: ");
         String motivo = leer("Motivo: "); if (finEntrada) return;
@@ -706,7 +705,7 @@ public final class VistaConsola {
         Equipo equipo = seleccionar("Equipo", controlador.listarEquipos()); if (equipo == null) return;
         String inicio = leer("Inicio aaaa-MM-dd HH:mm (vacío si se desconoce): "), descripcion = leer("Descripción: ");
         if (finEntrada) return;
-        System.out.println(controlador.registrarFalla(actor, equipo.getCodigo(), Fechas.ahora(), inicio, descripcion));
+        System.out.println(controlador.registrarFalla(actor, equipo.getCodigo(), RelojSesion.getInstancia().ahora(), inicio, descripcion));
         completada();
     }
 
@@ -714,7 +713,7 @@ public final class VistaConsola {
         controlador.verificarAdministrador(actor);
         Falla falla = seleccionar("Falla", controlador.listarFallas(actor)); if (falla == null) return;
         String trabajo = leer("Trabajo a realizar: "); if (finEntrada) return;
-        System.out.println(controlador.generarOrden(actor, falla.getNumero(), Fechas.ahora(), trabajo));
+        System.out.println(controlador.generarOrden(actor, falla.getNumero(), RelojSesion.getInstancia().ahora(), trabajo));
         completada();
     }
 
@@ -749,7 +748,7 @@ public final class VistaConsola {
         controlador.cerrarOrden(
                 actor,
                 orden.getNumero(),
-                Fechas.ahora(),
+                RelojSesion.getInstancia().ahora(),
                 detalle
         );
 
@@ -872,20 +871,20 @@ public final class VistaConsola {
 
     private void consultarAutorizacion() {
         Guardia guardia = guardia(); String documento = leer("Documento del visitante: "); if (finEntrada) return;
-        listar(controlador.buscarAutorizaciones(guardia, documento, Fechas.ahora()));
+        listar(controlador.buscarAutorizaciones(guardia, documento, RelojSesion.getInstancia().ahora()));
     }
 
     private void registrarIngreso() {
         Guardia guardia = guardia(); String documento = leer("Documento del visitante: "); if (finEntrada) return;
-        AutorizacionAcceso autorizacion = seleccionar("Autorización vigente", controlador.buscarAutorizaciones(guardia, documento, Fechas.ahora()));
+        AutorizacionAcceso autorizacion = seleccionar("Autorización vigente", controlador.buscarAutorizaciones(guardia, documento, RelojSesion.getInstancia().ahora()));
         if (autorizacion == null || finEntrada) return;
-        System.out.println(controlador.registrarIngreso(guardia, autorizacion.getNumero(), Fechas.ahora()));
+        System.out.println(controlador.registrarIngreso(guardia, autorizacion.getNumero(), RelojSesion.getInstancia().ahora()));
         completada();
     }
 
     private void registrarEgreso() {
         Guardia guardia = guardia(); String documento = leer("Documento del visitante: "); if (finEntrada) return;
-        System.out.println(controlador.registrarEgreso(guardia, documento, Fechas.ahora()));
+        System.out.println(controlador.registrarEgreso(guardia, documento, RelojSesion.getInstancia().ahora()));
         completada();
     }
 
@@ -937,7 +936,7 @@ public final class VistaConsola {
     }
 
     private String fecha(String nombre) {
-        return leer(nombre + " aaaa-MM-dd [" + Fechas.hoy() + "]: ", Fechas.hoy());
+        return leer(nombre + " aaaa-MM-dd [" + RelojSesion.getInstancia().hoy() + "]: ", RelojSesion.getInstancia().hoy());
     }
 
     private int entero(String mensaje) {

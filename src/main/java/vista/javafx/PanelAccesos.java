@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import controlador.GestorBarrioControlador;
 import modelo.accesos.*;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
 
@@ -63,7 +63,7 @@ final class PanelAccesos extends PanelBase {
         ComboBox<Lote> lote = f.opciones("Lote", controlador.listarLotesParaAutorizarVisitas(actor));
         ComboBox<Persona> persona = f.opciones("Persona", controlador.listarPersonas());
         ComboBox<TipoVisitante> tipo = f.opciones("Tipo", Arrays.asList(TipoVisitante.values()));
-        TextField inicio = f.texto("Fecha de inicio", Fechas.hoy()), fin = f.texto("Fecha de fin", Fechas.hoy());
+        TextField inicio = f.texto("Fecha de inicio", RelojSesion.getInstancia().hoy()), fin = f.texto("Fecha de fin", RelojSesion.getInstancia().hoy());
         TextField desde = f.texto("Hora desde (HH:mm)", ""), hasta = f.texto("Hora hasta (HH:mm)", "");
         CheckBox recurrente = f.casilla("Autorización recurrente");
         if (!f.mostrar()) return;
@@ -102,7 +102,7 @@ final class PanelAccesos extends PanelBase {
     }
 
     private List<AutorizacionAcceso> vigentes(String documento) {
-        return controlador.buscarAutorizaciones((Guardia) actor, documento, Fechas.ahora());
+        return controlador.buscarAutorizaciones((Guardia) actor, documento, RelojSesion.getInstancia().ahora());
     }
 
     private String pedirDocumento(String titulo) {
@@ -126,13 +126,13 @@ final class PanelAccesos extends PanelBase {
         ComboBox<AutorizacionAcceso> autorizacion = f.opciones("Autorización vigente", vigentes(documento));
         if (!f.mostrar()) return;
         operar(() -> Componentes.info(String.valueOf(controlador.registrarIngreso((Guardia) actor,
-                Formulario.elegido(autorizacion, "una autorización").getNumero(), Fechas.ahora()))));
+                Formulario.elegido(autorizacion, "una autorización").getNumero(), RelojSesion.getInstancia().ahora()))));
     }
 
     private void registrarEgreso() {
         String documento = pedirDocumento("Registrar egreso");
         if (documento == null) return;
         operar(() -> Componentes.info(String.valueOf(
-                controlador.registrarEgreso((Guardia) actor, documento, Fechas.ahora()))));
+                controlador.registrarEgreso((Guardia) actor, documento, RelojSesion.getInstancia().ahora()))));
     }
 }

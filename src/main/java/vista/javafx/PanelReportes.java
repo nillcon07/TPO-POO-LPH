@@ -2,7 +2,7 @@ package vista.javafx;
 
 import javafx.scene.control.TextArea;
 import controlador.GestorBarrioControlador;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.personas.Persona;
 
 /** Reportes y alertas del administrador. */
@@ -20,6 +20,6 @@ final class PanelReportes extends PanelBase {
     @Override String titulo() { return "Reportes"; }
 
     @Override void refrescar() {
-        texto.setText(controlador.generarReportes(actor, Fechas.ahora()));
+        texto.setText(controlador.generarReportes(actor, RelojSesion.getInstancia().ahora()));
     }
 }

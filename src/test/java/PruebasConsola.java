@@ -4,7 +4,7 @@ import controlador.GestorBarrioControlador;
 import modelo.archivos.RepositorioPersonasCsv;
 import principal.DatosDemo;
 import modelo.comunidad.Barrio;
-import modelo.comun.Fechas;
+import modelo.comun.RelojSesion;
 import modelo.finanzas.CuentaLote;
 import modelo.mantenimiento.EstadoEquipo;
 import modelo.reclamos.EstadoReclamo;
@@ -76,7 +76,7 @@ public final class PruebasConsola {
                 break;
             case 9:
                 exigir(x.barrio.getNotificaciones().size() == 1, "Avanzar la fecha genera una sola alerta.");
-                exigir(Fechas.ahora().equals("2026-11-05 10:00"), "La fecha se actualiza con el texto válido.");
+                exigir(RelojSesion.getInstancia().ahora().equals("2026-11-05 10:00"), "La fecha se actualiza con el texto válido.");
                 break;
             case 10:
                 exigir(x.controlador.listarPersonas().size() == 10, "Se agrega una sola persona válida.");
