@@ -40,7 +40,6 @@ final class PanelExpensas extends PanelBase {
         Lote anterior = lote.getValue();
         lote.setItems(FXCollections.observableArrayList(controlador.listarLotesConsultables(actor)));
         if (anterior != null && lote.getItems().contains(anterior)) lote.setValue(anterior);
-        else if (!lote.getItems().isEmpty()) lote.getSelectionModel().selectFirst();
         if (fecha.getText().isBlank()) fecha.setText(RelojSesion.getInstancia().hoy());
     }
 

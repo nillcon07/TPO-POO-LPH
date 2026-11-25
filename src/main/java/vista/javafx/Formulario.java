@@ -40,7 +40,6 @@ final class Formulario {
     <T> ComboBox<T> opciones(String etiqueta, List<T> valores) {
         ComboBox<T> combo = new ComboBox<>(FXCollections.observableArrayList(valores));
         combo.setMaxWidth(Double.MAX_VALUE);
-        if (!valores.isEmpty()) combo.getSelectionModel().selectFirst();
         agregar(etiqueta, combo);
         return combo;
     }
