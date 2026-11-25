@@ -21,7 +21,7 @@ final class PanelComunidad extends PanelBase {
         Componentes.columna(lotes, "Residentes", Lote::getResidentes);
         Componentes.columna(lotes, "Autorizados a reclamar", Lote::getPersonasAutorizadasReclamo);
         Componentes.columna(personal, "Legajo", Personal::getLegajo);
-        Componentes.columna(personal, "Rol", p -> VentanaPrincipal.rol(controlador, p));
+        Componentes.columna(personal, "Rol", p -> EscenaPrincipal.rol(controlador, p));
         Componentes.columna(personal, "Persona", p -> p);
         Componentes.columna(personal, "Ingreso", Personal::getFechaIngreso);
 
