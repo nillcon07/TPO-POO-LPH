@@ -11,11 +11,11 @@ import modelo.comun.RelojSesion;
 import modelo.personas.Persona;
 
 /** Pantalla inicial: se elige el usuario y la fecha y hora de la sesión. */
-final class VistaIngreso {
+final class EscenaIngreso {
     private final AplicacionFX aplicacion;
     private final GestorBarrioControlador controlador;
 
-    VistaIngreso(AplicacionFX aplicacion, GestorBarrioControlador controlador) {
+    EscenaIngreso(AplicacionFX aplicacion, GestorBarrioControlador controlador) {
         this.aplicacion = aplicacion;
         this.controlador = controlador;
     }
@@ -24,7 +24,7 @@ final class VistaIngreso {
         ComboBox<Persona> actor = new ComboBox<>(FXCollections.observableArrayList(controlador.listarActores()));
         actor.setConverter(new StringConverter<>() {
             @Override public String toString(Persona persona) {
-                return persona == null ? "" : persona + " - " + VentanaPrincipal.rol(controlador, persona);
+                return persona == null ? "" : persona + " - " + EscenaPrincipal.rol(controlador, persona);
             }
             @Override public Persona fromString(String texto) { return null; }
         });

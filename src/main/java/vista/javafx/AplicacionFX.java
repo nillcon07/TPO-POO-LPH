@@ -28,13 +28,13 @@ public class AplicacionFX extends Application {
     }
 
     void mostrarIngreso() {
-        ventana.setScene(new VistaIngreso(this, controlador).escena());
+        ventana.setScene(new EscenaIngreso(this, controlador).escena());
         ventana.sizeToScene();
         ventana.centerOnScreen();
     }
 
     void mostrarPrincipal(Persona actor) {
-        ventana.setScene(new VentanaPrincipal(this, controlador, actor).escena());
+        ventana.setScene(new EscenaPrincipal(this, controlador, actor).escena());
         ventana.sizeToScene();
         ventana.centerOnScreen();
     }

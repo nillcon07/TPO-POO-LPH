@@ -13,14 +13,14 @@ import modelo.comun.RelojSesion;
 import modelo.personas.*;
 
 /** Ventana de trabajo: muestra solo las pestañas que corresponden al rol del usuario. */
-final class VentanaPrincipal {
+final class EscenaPrincipal {
     private final AplicacionFX aplicacion;
     private final GestorBarrioControlador controlador;
     private final Persona actor;
     private final List<PanelBase> paneles = new ArrayList<>();
     private final Label estado = new Label();
 
-    VentanaPrincipal(AplicacionFX aplicacion, GestorBarrioControlador controlador, Persona actor) {
+    EscenaPrincipal(AplicacionFX aplicacion, GestorBarrioControlador controlador, Persona actor) {
         this.aplicacion = aplicacion;
         this.controlador = controlador;
         this.actor = actor;
