@@ -1,7 +1,5 @@
 package vista.javafx;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -31,7 +29,6 @@ final class VistaIngreso {
             @Override public Persona fromString(String texto) { return null; }
         });
         actor.setPrefWidth(400);
-        actor.getSelectionModel().selectFirst();
 
         RelojSesion reloj = RelojSesion.getInstancia();
         boolean sesionIniciada = reloj.tieneMomento();
@@ -44,7 +41,6 @@ final class VistaIngreso {
             controlador.verificarControles(reloj.ahora());
             aplicacion.mostrarPrincipal(elegido);
         });
-        ingresar.setDefaultButton(true);
 
         GridPane grilla = new GridPane();
         grilla.setHgap(10);
@@ -61,10 +57,10 @@ final class VistaIngreso {
         return new Scene(grilla);
     }
 
-    // Si ya había una sesión abierta se conserva su fecha; si no, se propone la del sistema.
+    // Si ya había una sesión abierta se muestra su fecha; si no, el campo queda vacío para ingresarla.
     private static String fechaInicial() {
         RelojSesion reloj = RelojSesion.getInstancia();
         if (reloj.tieneMomento()) return reloj.ahora();
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        return "";
     }
 }
