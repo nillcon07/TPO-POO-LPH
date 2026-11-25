@@ -1,11 +1,8 @@
 package vista.javafx;
 
-import java.util.List;
-import java.util.function.Supplier;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import controlador.GestorBarrioControlador;
-import modelo.comun.ReglaNegocioException;
 import modelo.personas.Persona;
 
 /**
@@ -33,14 +30,5 @@ abstract class PanelBase extends BorderPane {
             operacion.run();
             refrescar();
         });
-    }
-
-    /** true si la consulta devuelve opciones; un rechazo de permisos se interpreta como "no disponible". */
-    protected static boolean disponible(Supplier<? extends List<?>> consulta) {
-        try {
-            return !consulta.get().isEmpty();
-        } catch (ReglaNegocioException e) {
-            return false;
-        }
     }
 }

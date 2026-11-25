@@ -69,6 +69,12 @@ public class GestorBarrioControlador {
         return false;
     }
 
+    public boolean puedeReclamar(Persona actor) {
+        if (actor == null) return false;
+        for (Lote lote : barrio.getLotes()) if (lote.puedeReclamar(actor)) return true;
+        return false;
+    }
+
     private boolean perteneceAlPersonal(Personal actor) {
         for (Personal integrante : barrio.getPersonal()) if (integrante == actor) return true;
         return false;

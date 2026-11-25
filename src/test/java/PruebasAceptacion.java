@@ -496,6 +496,7 @@ public final class PruebasAceptacion {
             x.c.agregarComentario(x.tecnico, r.getNumero(), "2026-01-01 11:00", "Voy en camino");
             exigir(x.c.listarReclamos(x.admin).size() == 1, "El administrador ve todos.");
             exigir(x.c.listarReclamos(x.residente).isEmpty(), "Un residente sin permiso no ve los reclamos del lote.");
+            exigir(x.c.puedeReclamar(x.titular) && !x.c.puedeReclamar(x.residente) && !x.c.puedeReclamar(x.guardia), "Solo el titular o un autorizado puede reclamar.");
         });
         probar("Permisos: consultas de lotes, personal, fallas y órdenes protegidas en el controlador", () -> {
             Contexto x = new Contexto();
