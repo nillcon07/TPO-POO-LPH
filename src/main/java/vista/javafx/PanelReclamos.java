@@ -26,7 +26,7 @@ final class PanelReclamos extends PanelBase {
 
         HBox barra = Componentes.barra(Componentes.boton("Ver detalle", this::detalle),
                 Componentes.boton("Comentar", this::comentar));
-        if (disponible(() -> controlador.listarLotesParaReclamar(actor)))
+        if (controlador.puedeReclamar(actor))
             barra.getChildren().add(Componentes.boton("Nuevo reclamo", this::registrar));
         if (controlador.esAdministrador(actor))
             barra.getChildren().add(Componentes.boton("Asignar responsable", this::asignar));
