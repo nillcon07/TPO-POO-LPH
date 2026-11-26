@@ -10,7 +10,7 @@ import modelo.comunidad.Lote;
 import modelo.finanzas.*;
 import modelo.personas.Persona;
 
-/** Pestaña de expensas: consulta de cuenta (titular y administrador), emisión, pagos y ajustes (administrador). */
+// Pestaña de expensas: consulta de cuenta (titular y administrador), emisión, pagos y ajustes (administrador).
 final class PanelExpensas extends PanelBase {
     private final ComboBox<Lote> lote = new ComboBox<>();
     private final TextField fecha = new TextField();

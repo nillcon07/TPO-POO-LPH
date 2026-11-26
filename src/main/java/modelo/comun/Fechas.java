@@ -1,6 +1,6 @@
 package modelo.comun;
 
-/** Fechas en String y cálculos con enteros: calendario gregoriano, sin bibliotecas de fechas. */
+// Fechas en String y cálculos con enteros: calendario gregoriano, sin bibliotecas de fechas.
 // Clase de utilidad final para manejo, validación y comparación de fechas y horas representadas en formato String sin librerías externas.
 public final class Fechas {
     private Fechas() { }

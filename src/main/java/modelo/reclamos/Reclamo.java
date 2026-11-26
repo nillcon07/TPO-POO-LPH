@@ -80,7 +80,7 @@ public class Reclamo implements Serializable {
         Validaciones.exigir(puedeConsultar(autor), "El autor no puede comentar este reclamo.");
         comentarios.add(new Comentario(fecha, autor, texto));
     }
-    /** Experto en información: el administrador, el responsable asignado o quien puede reclamar por el lote. */
+    // Experto en información: el administrador, el responsable asignado o quien puede reclamar por el lote.
     public boolean puedeConsultar(Persona actor) {
         if (actor == null) return false;
         return actor instanceof Administrador

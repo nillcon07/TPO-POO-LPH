@@ -6,7 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-/** Diálogo con campos etiquetados. Solo captura datos: la validación la hace el modelo. */
+// Diálogo con campos etiquetados. Solo captura datos: la validación la hace el modelo.
 final class Formulario {
     private final Dialog<ButtonType> dialogo = new Dialog<>();
     private final GridPane grilla = new GridPane();
@@ -56,12 +56,12 @@ final class Formulario {
         fila++;
     }
 
-    /** true si el usuario confirmó con Aceptar. */
+    // true si el usuario confirmó con Aceptar.
     boolean mostrar() {
         return dialogo.showAndWait().filter(boton -> boton == ButtonType.OK).isPresent();
     }
 
-    /** Lee la opción elegida o rechaza si no hay ninguna. */
+    // Lee la opción elegida o rechaza si no hay ninguna.
     static <T> T elegido(ComboBox<T> combo, String campo) {
         T valor = combo.getValue();
         if (valor == null) throw new IllegalArgumentException("Seleccione " + campo + ".");

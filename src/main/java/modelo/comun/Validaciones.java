@@ -53,7 +53,7 @@ public final class Validaciones {
 
     public static double dinero(double valor) { return centavos(valor) / 100.0; }
 
-    /** Redondeo decimal a centavos, alejando de cero los empates, con String y enteros. */
+    // Redondeo decimal a centavos, alejando de cero los empates, con String y enteros.
     public static long centavos(double valor) {
         exigir(esFinito(valor), "Importe no finito.");
         boolean negativo = valor < 0;

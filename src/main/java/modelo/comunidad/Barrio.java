@@ -9,7 +9,7 @@ import modelo.mantenimiento.*;
 import modelo.accesos.*;
 
 
-/** Raíz del dominio: conserva las identidades y relaciones del barrio. */
+// Raíz del dominio: conserva las identidades y relaciones del barrio.
 public class Barrio implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String nombre;

@@ -8,11 +8,9 @@ import modelo.comun.RelojSesion;
 import modelo.mantenimiento.*;
 import modelo.personas.*;
 
-/**
- * Pestaña de equipos y mantenimiento.
- * Administrador: equipos, fallas y órdenes. Técnico: sus órdenes para cerrar.
- * Vecinos y guardias: informar fallas.
- */
+// Pestaña de equipos y mantenimiento.
+// Administrador: equipos, fallas y órdenes. Técnico: sus órdenes para cerrar.
+// Vecinos y guardias: informar fallas.
 final class PanelMantenimiento extends PanelBase {
     private final TableView<Equipo> equipos = Componentes.tabla();
     private final TableView<Falla> fallas = Componentes.tabla();

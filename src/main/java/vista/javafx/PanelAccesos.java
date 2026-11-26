@@ -11,11 +11,9 @@ import modelo.comun.RelojSesion;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
 
-/**
- * Pestaña de visitas y accesos.
- * Administrador: consulta y proveedores habituales. Vecinos: autorizan visitas.
- * Guardia: consulta autorizaciones por documento y registra ingresos y egresos.
- */
+// Pestaña de visitas y accesos.
+// Administrador: consulta y proveedores habituales. Vecinos: autorizan visitas.
+// Guardia: consulta autorizaciones por documento y registra ingresos y egresos.
 final class PanelAccesos extends PanelBase {
     private final TableView<AutorizacionAcceso> autorizaciones = Componentes.tabla();
     private final TableView<RegistroAcceso> accesos = Componentes.tabla();

@@ -8,7 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
-/** Utilidades de la vista: tablas, botones y mensajes. No contiene reglas de negocio. */
+// Utilidades de la vista: tablas, botones y mensajes. No contiene reglas de negocio.
 final class Componentes {
     private Componentes() { }
 
@@ -17,7 +17,7 @@ final class Componentes {
         return tabla;
     }
 
-    /** Agrega una columna cuyo texto se obtiene del objeto de la fila (función lambda). */
+    // Agrega una columna cuyo texto se obtiene del objeto de la fila (función lambda).
     static <T> void columna(TableView<T> tabla, String titulo, Function<T, Object> valor) {
         TableColumn<T, String> columna = new TableColumn<>(titulo);
         columna.setCellValueFactory(celda -> {
@@ -27,16 +27,14 @@ final class Componentes {
         tabla.getColumns().add(columna);
     }
 
-    /**
-     * Recarga la tabla. refresh() es necesario porque las filas son los mismos objetos del modelo
-     * (no observables): sin él, JavaFX no vuelve a dibujar las celdas que cambiaron por dentro.
-     */
+    // Recarga la tabla. refresh() es necesario porque las filas son los mismos objetos del modelo
+    // (no observables): sin él, JavaFX no vuelve a dibujar las celdas que cambiaron por dentro.
     static <T> void cargar(TableView<T> tabla, List<T> elementos) {
         tabla.setItems(FXCollections.observableArrayList(elementos));
         tabla.refresh();
     }
 
-    /** Devuelve la fila seleccionada o lanza un error legible si no hay selección. */
+    // Devuelve la fila seleccionada o lanza un error legible si no hay selección.
     static <T> T seleccionado(TableView<T> tabla, String que) {
         T elegido = tabla.getSelectionModel().getSelectedItem();
         if (elegido == null) throw new IllegalArgumentException("Seleccione " + que + " en la tabla.");
@@ -55,7 +53,7 @@ final class Componentes {
         return barra;
     }
 
-    /** Ejecuta una acción y muestra los rechazos del modelo como diálogo de error. */
+    // Ejecuta una acción y muestra los rechazos del modelo como diálogo de error.
     static void ejecutar(Runnable accion) {
         try {
             accion.run();

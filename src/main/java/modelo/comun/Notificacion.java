@@ -5,7 +5,7 @@ import java.io.Serializable;
 import modelo.comun.Fechas;
 import modelo.personas.Persona;
 
-/** Constancia interna: no envía correos ni mensajes externos. */
+// Constancia interna: no envía correos ni mensajes externos.
 public final class Notificacion implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String clave, fecha, motivo;

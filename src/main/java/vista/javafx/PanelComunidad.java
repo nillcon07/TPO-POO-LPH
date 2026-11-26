@@ -8,7 +8,7 @@ import modelo.comun.RelojSesion;
 import modelo.comunidad.Lote;
 import modelo.personas.*;
 
-/** Pestaña de comunidad y personal (solo administrador). */
+// Pestaña de comunidad y personal (solo administrador).
 final class PanelComunidad extends PanelBase {
     private final TableView<Lote> lotes = Componentes.tabla();
     private final TableView<Personal> personal = Componentes.tabla();

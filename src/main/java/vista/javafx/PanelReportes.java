@@ -5,7 +5,7 @@ import controlador.GestorBarrioControlador;
 import modelo.comun.RelojSesion;
 import modelo.personas.Persona;
 
-/** Reportes y alertas del administrador. */
+// Reportes y alertas del administrador.
 final class PanelReportes extends PanelBase {
     private final TextArea texto = new TextArea();
 

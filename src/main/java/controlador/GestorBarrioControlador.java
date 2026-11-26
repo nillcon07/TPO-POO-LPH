@@ -14,7 +14,7 @@ import modelo.repositorios.*;
 import modelo.reportes.GeneradorReportes;
 
 
-/** GRASP Controller: coordina; las reglas viven en el modelo y la E/S en repositorios. */
+// GRASP Controller: coordina; las reglas viven en el modelo y la E/S en repositorios.
 public class GestorBarrioControlador {
     private final Barrio barrio;
     private final RepositorioReclamos reclamos;
@@ -43,8 +43,8 @@ public class GestorBarrioControlador {
         admin(actor);
     }
 
-    /* ---------- Consultas de rol: la vista las usa para mostrar u ocultar opciones,
-       pero cada operación vuelve a validar el permiso (la regla no depende de la interfaz). ---------- */
+    // ---------- Consultas de rol: la vista las usa para mostrar u ocultar opciones,
+    // pero cada operación vuelve a validar el permiso (la regla no depende de la interfaz). ----------
 
     public boolean esAdministrador(Persona actor) {
         return actor instanceof Administrador && actor == barrio.getAdministrador();
@@ -248,7 +248,7 @@ public class GestorBarrioControlador {
         return barrio.getPersonal();
     }
 
-    /** Personal habilitado para atender un tipo de reclamo (solo lo usa el administrador al asignar). */
+    // Personal habilitado para atender un tipo de reclamo (solo lo usa el administrador al asignar).
     public List<Personal> listarResponsablesHabilitados(Persona actor, TipoReclamo tipo) {
         admin(actor);
         List<Personal> resultado = new ArrayList<>();
@@ -264,7 +264,7 @@ public class GestorBarrioControlador {
         return resultado;
     }
 
-    /** Los equipos son públicos dentro del barrio: cualquier vecino o guardia puede informar fallas. */
+    // Los equipos son públicos dentro del barrio: cualquier vecino o guardia puede informar fallas.
     public List<Equipo> listarEquipos() {
         return barrio.getEquipos();
     }
@@ -304,7 +304,7 @@ public class GestorBarrioControlador {
         return resultado;
     }
 
-    /** Administrador y portería ven todas; un vecino solo las de los lotes donde puede autorizar visitas. */
+    // Administrador y portería ven todas; un vecino solo las de los lotes donde puede autorizar visitas.
     public List<AutorizacionAcceso> listarAutorizaciones(Persona actor) {
         validarActor(actor);
         if (esAdministrador(actor) || esGuardiaPorteria(actor)) return barrio.getAutorizaciones();

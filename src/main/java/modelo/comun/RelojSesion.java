@@ -1,6 +1,6 @@
 package modelo.comun;
 
-/** Singleton: fecha y hora de la sesión, única y compartida por todo el sistema. */
+// Singleton: fecha y hora de la sesión, única y compartida por todo el sistema.
 public final class RelojSesion {
     private static final RelojSesion INSTANCIA = new RelojSesion();
     private String momentoActual;

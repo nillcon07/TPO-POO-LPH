@@ -9,7 +9,7 @@ import modelo.comunidad.Lote;
 import modelo.personas.*;
 import modelo.reclamos.*;
 
-/** Pestaña de reclamos. Cada usuario ve solo los reclamos que puede consultar. */
+// Pestaña de reclamos. Cada usuario ve solo los reclamos que puede consultar.
 final class PanelReclamos extends PanelBase {
     private final TableView<Reclamo> tabla = Componentes.tabla();
 

@@ -7,7 +7,7 @@ import controlador.GestorBarrioControlador;
 import modelo.personas.Persona;
 import principal.CreadorControlador;
 
-/** Vista gráfica del sistema. Usa el mismo controlador que la versión de consola. */
+// Vista gráfica del sistema. Usa el mismo controlador que la versión de consola.
 public class AplicacionFX extends Application {
     private GestorBarrioControlador controlador;
     private Stage ventana;
@@ -39,7 +39,7 @@ public class AplicacionFX extends Application {
         ventana.centerOnScreen();
     }
 
-    /** Al cerrar la ventana se guardan los datos, igual que al salir de la consola. */
+    // Al cerrar la ventana se guardan los datos, igual que al salir de la consola.
     @Override
     public void stop() {
         if (controlador == null) return;

@@ -5,7 +5,7 @@ import modelo.finanzas.EstadoExpensa;
 import modelo.finanzas.Expensa;
 import modelo.comun.*;
 
-/** Resultado de una consulta; nunca reemplaza los movimientos originales. */
+// Resultado de una consulta; nunca reemplaza los movimientos originales.
 public final class SaldoExpensa {
     private final Expensa expensa;
     private final double capital, intereses, reconocido;

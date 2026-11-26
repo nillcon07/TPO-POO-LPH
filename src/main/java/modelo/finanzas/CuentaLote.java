@@ -9,7 +9,7 @@ import modelo.comunidad.Lote;
 import modelo.comun.*;
 
 
-/** Experto en el historial financiero de un lote. Los intereses nunca se capitalizan. */
+// Experto en el historial financiero de un lote. Los intereses nunca se capitalizan.
 public class CuentaLote implements Serializable {
     private static final long serialVersionUID = 1L;
     private final Lote lote;

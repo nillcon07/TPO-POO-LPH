@@ -12,7 +12,7 @@ import controlador.GestorBarrioControlador;
 import modelo.comun.RelojSesion;
 import modelo.personas.*;
 
-/** Ventana de trabajo: muestra solo las pestañas que corresponden al rol del usuario. */
+// Ventana de trabajo: muestra solo las pestañas que corresponden al rol del usuario.
 final class EscenaPrincipal {
     private final AplicacionFX aplicacion;
     private final GestorBarrioControlador controlador;

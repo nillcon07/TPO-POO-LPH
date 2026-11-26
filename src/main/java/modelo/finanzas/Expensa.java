@@ -29,7 +29,7 @@ public class Expensa implements Serializable {
     public String getFechaEmision() { return fechaEmision; }
     public double getImporteBase() { return importeBase; }
     public Lote getLote() { return lote; }
-    /** Imputaciones originales, conservadas aun después de ajustes. */
+    // Imputaciones originales, conservadas aun después de ajustes.
     public List<ImputacionPago> getImputaciones() { return new ArrayList<>(imputaciones); }
     public EstadoExpensa getEstado(String fechaConsulta) {
         for (SaldoExpensa saldo : lote.getCuenta().consultar(fechaConsulta).getSaldos()) {

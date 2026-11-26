@@ -10,7 +10,7 @@ import controlador.GestorBarrioControlador;
 import modelo.comun.RelojSesion;
 import modelo.personas.Persona;
 
-/** Pantalla inicial: se elige el usuario y la fecha y hora de la sesión. */
+// Pantalla inicial: se elige el usuario y la fecha y hora de la sesión.
 final class EscenaIngreso {
     private final AplicacionFX aplicacion;
     private final GestorBarrioControlador controlador;

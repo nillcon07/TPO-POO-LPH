@@ -5,7 +5,7 @@ import controlador.GestorBarrioControlador;
 import modelo.comunidad.Lote;
 import modelo.personas.Persona;
 
-/** Pestaña del titular para autorizar o revocar permisos de reclamo sobre sus lotes. */
+// Pestaña del titular para autorizar o revocar permisos de reclamo sobre sus lotes.
 final class PanelMisLotes extends PanelBase {
     private final TableView<Lote> lotes = Componentes.tabla();
 

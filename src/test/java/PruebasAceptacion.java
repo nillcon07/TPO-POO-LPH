@@ -13,7 +13,7 @@ import modelo.accesos.*;
 import modelo.comun.*;
 import modelo.repositorios.*;
 
-/** Pruebas ejecutables sin descargas ni framework; una falla produce código de salida distinto de cero. */
+// Pruebas ejecutables sin descargas ni framework; una falla produce código de salida distinto de cero.
 public final class PruebasAceptacion {
     private static int correctas, fallidas, comprobaciones;
     private static String informe = "";
