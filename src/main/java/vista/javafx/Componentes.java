@@ -14,8 +14,6 @@ final class Componentes {
 
     static <T> TableView<T> tabla() {
         TableView<T> tabla = new TableView<>();
-        tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tabla.setPlaceholder(new Label("Sin registros."));
         return tabla;
     }
 
@@ -69,14 +67,12 @@ final class Componentes {
     static void error(String mensaje) {
         Alert alerta = new Alert(Alert.AlertType.ERROR, mensaje, ButtonType.OK);
         alerta.setTitle("Error");
-        alerta.setHeaderText(null);
         alerta.showAndWait();
     }
 
     static void info(String mensaje) {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION, mensaje, ButtonType.OK);
         alerta.setTitle("Los Aromos");
-        alerta.setHeaderText(null);
         alerta.showAndWait();
     }
 

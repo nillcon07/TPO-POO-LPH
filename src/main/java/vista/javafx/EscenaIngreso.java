@@ -22,12 +22,6 @@ final class EscenaIngreso {
 
     Scene escena() {
         ComboBox<Persona> actor = new ComboBox<>(FXCollections.observableArrayList(controlador.listarActores()));
-        actor.setConverter(new StringConverter<>() {
-            @Override public String toString(Persona persona) {
-                return persona == null ? "" : persona + " - " + EscenaPrincipal.rol(controlador, persona);
-            }
-            @Override public Persona fromString(String texto) { return null; }
-        });
         actor.setPrefWidth(400);
 
         RelojSesion reloj = RelojSesion.getInstancia();

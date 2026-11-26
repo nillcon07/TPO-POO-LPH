@@ -48,7 +48,6 @@ final class EscenaPrincipal {
         if (admin) paneles.add(new PanelReportes(controlador, actor));
 
         TabPane pestanas = new TabPane();
-        pestanas.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         for (PanelBase panel : paneles) {
             Tab pestana = new Tab(panel.titulo(), panel);
             pestana.setOnSelectionChanged(evento -> {
